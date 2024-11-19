@@ -28,7 +28,7 @@ If you find this kind of content inspiring or you just want to support my missio
 
 I'll be having no other income these months so I'll be tremendously grateful 🫶.
 
-![Buy me a Coffee](/img1.jpg)
+![Buy me a Coffee Pic](/portfolio/images/img1.jpg)
 
 ---
 
