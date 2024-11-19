@@ -1,7 +1,7 @@
 baseURL: https://myportfolio.org/
 languageCode: en-us
 title: Iñigo's Portfolio
-theme: PaperMod
+theme: ["PaperMod"]
 
 params:
   homeInfoParams:
