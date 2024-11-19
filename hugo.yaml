@@ -1,4 +1,28 @@
-baseURL: https://example.org/
+baseURL: https://myportfolio.org/
 languageCode: en-us
-title: My New Hugo Site
-theme: ["PaperMod"]
+title: Iñigo's Portfolio
+theme: PaperMod
+
+params:
+  homeInfoParams:
+    Title: ¡Hola! - I'm Iñigo
+    Content: 👋 Welcome to my portfolio. I am a physicist and a maker. I enjoy hacking, coding and creating.\              
+              
+              I'm currently engaged in the [Winter of Output](./posts/winter-of-output).\
+
+              It was inspired by Andy Kong's [Year of Output](https://andykong.org/projects/yearofoutput/).
+
+  socialIcons:
+    - name: github
+      title: View my GitHub
+      url: https://github.com/ignigoliz
+    - name: X
+      title: View my X/Twitter profile
+      url: https://x.com/IgnigoLiz
+    - name: linkedin
+      title: View my Linkedin profile
+      url: https://www.linkedin.com/in/inigo-lara-psi/
+    - name: kofi
+      title: Buy me a coffee!
+      url: https://ko-fi.com/inigolara
+  
