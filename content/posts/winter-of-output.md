@@ -4,7 +4,7 @@ draft: false
 title: 'Winter of Output'
 slug: winter-of-output
 ---
-![Scandinavian winter landscape](/portfolio/images/DSCF1490.jpg)
+![Scandinavian winter landscape](/portfolio/images/DSCF1490.jpg#center)
 
 It's November 18th. Winter is already making an appearance here in Scandinavia. My hands start to get cold when I bike home, the few leaves that remain in the trees are falling, and the darkness arrives before the workday is over. Recently, I quit my job because it didn't fullfil me and, for once, I've decided not to rush-into-the-next-thing. I've decided that, for the next 4 months, I will encourage my own creativity and see where it brings me. I'll try to *build my next thing*. I've called this period... the *Winter of Output* (inspired by Andy Kong's [Year of Output](https://andykong.org/projects/yearofoutput/)).
 
@@ -29,7 +29,7 @@ If you find this kind of content inspiring or you just want to support my missio
 
 I'll be having no other income these months so I'll be tremendously grateful 🫶.
 
-![Buy me a Coffee Pic](/portfolio/images/img1.jpg)
+![Buy me a Coffee Pic](/portfolio/images/img1.jpg#center)
 
 ---
 
