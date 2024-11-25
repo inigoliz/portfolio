@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Iñigo&#39;s Portfolio</title>
-    <link>https://myportfolio.org/</link>
+    <link>http://localhost:1313/</link>
     <description>Recent content on Iñigo&#39;s Portfolio</description>
     <generator>Hugo -- 0.138.0</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 18 Nov 2024 19:07:28 +0100</lastBuildDate>
-    <atom:link href="https://myportfolio.org/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Winter of Output</title>
-      <link>https://myportfolio.org/posts/winter-of-output/</link>
+      <link>http://localhost:1313/posts/winter-of-output/</link>
       <pubDate>Mon, 18 Nov 2024 19:07:28 +0100</pubDate>
-      <guid>https://myportfolio.org/posts/winter-of-output/</guid>
+      <guid>http://localhost:1313/posts/winter-of-output/</guid>
       <description>&lt;p&gt;&lt;img
-    src=&#34;https://myportfolio.org/portfolio/images/DSCF1490.jpg#center&#34; alt=&#34;Scandinavian winter landscape&#34;
+    src=&#34;http://localhost:1313/portfolio/images/DSCF1490.jpg#center&#34; alt=&#34;Scandinavian winter landscape&#34;
     
-     style=&#34;width: 100%; max-width: 400px;&#34;
+    
     /&gt;&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s November 18th. Winter is already making an appearance here in Scandinavia. My hands start to get cold when I bike home, the few leaves that remain in the trees are falling, and the darkness arrives before the workday is over. Recently, I quit my job because it didn&amp;rsquo;t fullfil me and, for once, I&amp;rsquo;ve decided not to rush-into-the-next-thing. I&amp;rsquo;ve decided that, for the next 4 months, I will encourage my own creativity and see where it brings me. I&amp;rsquo;ll try to &lt;em&gt;build my next thing&lt;/em&gt;. I&amp;rsquo;ve called this period&amp;hellip; the &lt;em&gt;Winter of Output&lt;/em&gt; (inspired by Andy Kong&amp;rsquo;s &lt;a href=&#34;https://andykong.org/projects/yearofoutput/&#34;&gt;Year of Output&lt;/a&gt;).&lt;/p&gt;</description>
     </item>
