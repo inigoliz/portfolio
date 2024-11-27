@@ -4,6 +4,8 @@ draft: false
 title: 'Automatic Cat Feeder'
 slug: janus-cat-feeder
 ---
+![Janus header art](/portfolio/images/janus-cat-feeder/janus_header.png#center)
+
 ---
 ## What is it?
 
