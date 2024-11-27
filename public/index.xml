@@ -2,19 +2,42 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Iñigo&#39;s Portfolio</title>
-    <link>http://localhost:1313/</link>
+    <link>https://myportfolio.org/</link>
     <description>Recent content on Iñigo&#39;s Portfolio</description>
     <generator>Hugo -- 0.138.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 18 Nov 2024 19:07:28 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 27 Nov 2024 12:36:05 +0100</lastBuildDate>
+    <atom:link href="https://myportfolio.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Automatic Cat Feeder</title>
+      <link>https://myportfolio.org/posts/janus-cat-feeder/</link>
+      <pubDate>Wed, 27 Nov 2024 12:36:05 +0100</pubDate>
+      <guid>https://myportfolio.org/posts/janus-cat-feeder/</guid>
+      <description>&lt;hr&gt;
+&lt;h2 id=&#34;what-is-it&#34;&gt;What is it?&lt;/h2&gt;
+&lt;p&gt;&lt;img
+    src=&#34;https://myportfolio.org/images/janus-cat-feeder/IMG_9965_2.gif#center&#34; alt=&#34;Lilo getting her food&#34;
+    
+     style=&#34;width: 100%; max-width: 350px;&#34;
+    /&gt;
+A camera-controlled cat feeder that only exposes the food when a certain pet is around.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;motivation&#34;&gt;Motivation&lt;/h2&gt;
+&lt;p&gt;I have two cats: one is black and slim and the other is white and chubby. The black one is called Lilo. The white one, Coco.&lt;/p&gt;
+&lt;p&gt;&lt;img
+    src=&#34;https://myportfolio.org/images/janus-cat-feeder/IMG_9967.jpg#center&#34; alt=&#34;Lilo and Coco&#34;
+    
+     style=&#34;width: 100%; max-width: 350px;&#34;
+    /&gt;&lt;/p&gt;
+&lt;p&gt;The problem is that Coco eats Lilo&amp;rsquo;s wet food. I&amp;rsquo;ve built an automatic pet feeder that only exposes the food when Lilo approaches, thus stopping Coco from eating it.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Winter of Output</title>
-      <link>http://localhost:1313/posts/winter-of-output/</link>
+      <link>https://myportfolio.org/posts/winter-of-output/</link>
       <pubDate>Mon, 18 Nov 2024 19:07:28 +0100</pubDate>
-      <guid>http://localhost:1313/posts/winter-of-output/</guid>
+      <guid>https://myportfolio.org/posts/winter-of-output/</guid>
       <description>&lt;p&gt;&lt;img
-    src=&#34;http://localhost:1313/portfolio/images/DSCF1490.jpg#center&#34; alt=&#34;Scandinavian winter landscape&#34;
+    src=&#34;https://myportfolio.org/portfolio/images/DSCF1490.jpg#center&#34; alt=&#34;Scandinavian winter landscape&#34;
     
     
     /&gt;&lt;/p&gt;

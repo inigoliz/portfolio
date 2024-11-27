@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Automatic Cat Feeder | Iñigo&#39;s Portfolio</title>
+<meta name="keywords" content="">
+<meta name="description" content="
+What is it?
+
+A camera-controlled cat feeder that only exposes the food when a certain pet is around.
+
+Motivation
+I have two cats: one is black and slim and the other is white and chubby. The black one is called Lilo. The white one, Coco.
+
+The problem is that Coco eats Lilo&rsquo;s wet food. I&rsquo;ve built an automatic pet feeder that only exposes the food when Lilo approaches, thus stopping Coco from eating it.">
+<meta name="author" content="">
+<link rel="canonical" href="https://myportfolio.org/posts/janus-cat-feeder/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d6fcd20a4fb86efa4dfac8ec95da60244cc8871042183da1ef28e3a762ad79c8.css" integrity="sha256-1vzSCk&#43;4bvpN&#43;sjsldpgJEzIhxBCGD2h7yjjp2Ktecg=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://myportfolio.org/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://myportfolio.org/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://myportfolio.org/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://myportfolio.org/apple-touch-icon.png">
+<link rel="mask-icon" href="https://myportfolio.org/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://myportfolio.org/posts/janus-cat-feeder/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:url" content="https://myportfolio.org/posts/janus-cat-feeder/">
+  <meta property="og:site_name" content="Iñigo&#39;s Portfolio">
+  <meta property="og:title" content="Automatic Cat Feeder">
+  <meta property="og:description" content=" What is it? A camera-controlled cat feeder that only exposes the food when a certain pet is around.
+Motivation I have two cats: one is black and slim and the other is white and chubby. The black one is called Lilo. The white one, Coco.
+The problem is that Coco eats Lilo’s wet food. I’ve built an automatic pet feeder that only exposes the food when Lilo approaches, thus stopping Coco from eating it.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-11-27T12:36:05+01:00">
+    <meta property="article:modified_time" content="2024-11-27T12:36:05+01:00">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Automatic Cat Feeder">
+<meta name="twitter:description" content="
+What is it?
+
+A camera-controlled cat feeder that only exposes the food when a certain pet is around.
+
+Motivation
+I have two cats: one is black and slim and the other is white and chubby. The black one is called Lilo. The white one, Coco.
+
+The problem is that Coco eats Lilo&rsquo;s wet food. I&rsquo;ve built an automatic pet feeder that only exposes the food when Lilo approaches, thus stopping Coco from eating it.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://myportfolio.org/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Automatic Cat Feeder",
+      "item": "https://myportfolio.org/posts/janus-cat-feeder/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Automatic Cat Feeder",
+  "name": "Automatic Cat Feeder",
+  "description": " What is it? A camera-controlled cat feeder that only exposes the food when a certain pet is around.\nMotivation I have two cats: one is black and slim and the other is white and chubby. The black one is called Lilo. The white one, Coco.\nThe problem is that Coco eats Lilo\u0026rsquo;s wet food. I\u0026rsquo;ve built an automatic pet feeder that only exposes the food when Lilo approaches, thus stopping Coco from eating it.\n",
+  "keywords": [
+    
+  ],
+  "articleBody": " What is it? A camera-controlled cat feeder that only exposes the food when a certain pet is around.\nMotivation I have two cats: one is black and slim and the other is white and chubby. The black one is called Lilo. The white one, Coco.\nThe problem is that Coco eats Lilo’s wet food. I’ve built an automatic pet feeder that only exposes the food when Lilo approaches, thus stopping Coco from eating it.\nDesign The pet feeder is designed as a box with a drawer. Inside the box, a mechanic system controls the opening and closing of the drawer. A logic board decides when to open the drawer based on the images feed by a camera. A push button also allows for manual operation of the drawer.\nThe box is designed such that when the drawer closes, it leaves no space for Coco to try to force the mechanism.\nThe design of the device went through several iterations. The biggest issue to overcome was that Coco, once aware that there was food inside, would try to force the cat-feeder to get access to the food.\nInner Working A servomotor operates a 3D-printed rack and pinion mechanism, which opens and closes the drawer.\nIn order not to harm the cats in case of malfunction, the rack is coupled to the drawer thorugh a pair of magnets. If something blocks the drawer while it closes, the magnets detach, avoiding any possible harm both to the cats and to the device.\nA Raspberry Pi + Camera Module acts as the logic board. A custom shield wires together the different components.\nImage Processing I’ve tried different approaches to process the feed of the camera and decide whether to open the drawer or not. Even though in my heart I really wanted to use some object detection and classification ML model to detect the cats, the truth is that a simple pipeline that just analized the histograms of the frames is what worked best. The problem is that when the cats get close enough, the camera just sees a fuzzy image.\nThe final algorithm was as simple as:\nTransform frame to grayscale Compute histogram Check if the number of pixels with pixel_intensity \u003c 50 was above an experimentally determined threshold. The algorithm incorporates other features, such as toggle debouncing etc. The full code is available in my github.\n",
+  "wordCount" : "394",
+  "inLanguage": "en",
+  "datePublished": "2024-11-27T12:36:05+01:00",
+  "dateModified": "2024-11-27T12:36:05+01:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://myportfolio.org/posts/janus-cat-feeder/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Iñigo's Portfolio",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://myportfolio.org/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://myportfolio.org/" accesskey="h" title="Iñigo&#39;s Portfolio (Alt + H)">Iñigo&#39;s Portfolio</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Automatic Cat Feeder
+    </h1>
+    <div class="post-meta"><span title='2024-11-27 12:36:05 +0100 CET'>November 27, 2024</span>
+
+</div>
+  </header> 
+  <div class="post-content"><hr>
+<h2 id="what-is-it">What is it?<a hidden class="anchor" aria-hidden="true" href="#what-is-it">#</a></h2>
+<p><img
+    src="/images/janus-cat-feeder/IMG_9965_2.gif#center" alt="Lilo getting her food"
+    
+     style="width: 100%; max-width: 350px;"
+    />
+A camera-controlled cat feeder that only exposes the food when a certain pet is around.</p>
+<hr>
+<h2 id="motivation">Motivation<a hidden class="anchor" aria-hidden="true" href="#motivation">#</a></h2>
+<p>I have two cats: one is black and slim and the other is white and chubby. The black one is called Lilo. The white one, Coco.</p>
+<p><img
+    src="/images/janus-cat-feeder/IMG_9967.jpg#center" alt="Lilo and Coco"
+    
+     style="width: 100%; max-width: 350px;"
+    /></p>
+<p>The problem is that Coco eats Lilo&rsquo;s wet food. I&rsquo;ve built an automatic pet feeder that only exposes the food when Lilo approaches, thus stopping Coco from eating it.</p>
+<p><img
+    src="/images/janus-cat-feeder/lilo_coco_side_by_side.gif#center" alt="Both using the feeder"
+    
+     style="width: 100%; max-width: 600px;"
+    /></p>
+<h2 id="design">Design<a hidden class="anchor" aria-hidden="true" href="#design">#</a></h2>
+<p>The pet feeder is designed as a box with a drawer. Inside the box, a mechanic system controls the opening and closing of the drawer. A logic board decides when to open the drawer based on the images feed by a camera. A push button also allows for manual operation of the drawer.</p>
+<p><img
+    src="/images/janus-cat-feeder/IMG_0024.jpg#center" alt="Cat Feeder overview"
+    
+     style="width: 100%; max-width: 350px;"
+    /></p>
+<p>The box is designed such that when the drawer closes, it leaves no space for Coco to try to force the mechanism.</p>
+<p><img
+    src="/images/janus-cat-feeder/IMG_0005.gif#center" alt="View of the door closing tightly"
+    
+     style="width: 100%; max-width: 350px;"
+    /></p>
+<p>The design of the device went through several iterations. The biggest issue to overcome was that Coco, once aware that there was food inside, would try to force the cat-feeder to get access to the food.</p>
+<h2 id="inner-working">Inner Working<a hidden class="anchor" aria-hidden="true" href="#inner-working">#</a></h2>
+<p>A servomotor operates a 3D-printed rack and pinion mechanism, which opens and closes the drawer.</p>
+<p><img
+    src="/images/janus-cat-feeder/IMG_9995.gif#center" alt="Rack and pinion working"
+    
+     style="width: 100%; max-width: 600px;"
+    /></p>
+<p>In order not to harm the cats in case of malfunction, the rack is coupled to the drawer thorugh a pair of magnets. If something blocks the drawer while it closes, the magnets detach, avoiding any possible harm both to the cats and to the device.</p>
+<p><img
+    src="/images/janus-cat-feeder/IMG_0026.jpg#center" alt="Closeup of the magnets"
+    
+     style="width: 100%; max-width: 350px;"
+    /></p>
+<p>A Raspberry Pi + Camera Module acts as the logic board. A custom shield wires together the different components.</p>
+<p><img
+    src="/images/janus-cat-feeder/rpi_and_shield_2.png#center" alt="Electronics"
+    
+     style="width: 100%; max-width: 1000px;"
+    /></p>
+<h2 id="image-processing">Image Processing<a hidden class="anchor" aria-hidden="true" href="#image-processing">#</a></h2>
+<p>I&rsquo;ve tried different approaches to process the feed of the camera and decide whether to open the drawer or not. Even though in my heart I really wanted to use some object detection and classification ML model to detect the cats, the truth is that a simple pipeline that just analized the histograms of the frames is what worked best. The problem is that when the cats get close enough, the camera just sees a fuzzy image.</p>
+<p><img
+    src="/images/janus-cat-feeder/cats_collage_2.png#center" alt="Closeup of the cats when eating"
+    
+    
+    /></p>
+<p>The final algorithm was as simple as:</p>
+<ol>
+<li>Transform frame to grayscale</li>
+<li>Compute histogram</li>
+<li>Check if the number of pixels with <code>pixel_intensity &lt; 50</code> was above an experimentally determined threshold.</li>
+</ol>
+<p><img
+    src="/images/janus-cat-feeder/coco_lilo_hist_2.gif#center" alt="View of the door closing tightly"
+    
+     style="width: 100%; max-width: 800px;"
+    /></p>
+<p>The algorithm incorporates other features, such as toggle debouncing etc. The full code is available in <a href="https://github.com/ignigoliz/janus/">my github</a>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2024 <a href="https://myportfolio.org/">Iñigo&#39;s Portfolio</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
