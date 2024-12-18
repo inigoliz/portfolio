@@ -2,13 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://ignigoliz.github.io/portfolio/posts/janus-cat-feeder/</loc>
-    <lastmod>2024-11-27T12:36:05+01:00</lastmod>
-  </url><url>
     <loc>https://ignigoliz.github.io/portfolio/</loc>
-    <lastmod>2024-11-27T12:36:05+01:00</lastmod>
+    <lastmod>2024-12-10T14:27:41+01:00</lastmod>
+  </url><url>
+    <loc>https://ignigoliz.github.io/portfolio/posts/amanuensis-eeprom-interface/</loc>
+    <lastmod>2024-12-10T14:27:41+01:00</lastmod>
   </url><url>
     <loc>https://ignigoliz.github.io/portfolio/posts/</loc>
+    <lastmod>2024-12-10T14:27:41+01:00</lastmod>
+  </url><url>
+    <loc>https://ignigoliz.github.io/portfolio/posts/janus-cat-feeder/</loc>
     <lastmod>2024-11-27T12:36:05+01:00</lastmod>
   </url><url>
     <loc>https://ignigoliz.github.io/portfolio/posts/winter-of-output/</loc>
