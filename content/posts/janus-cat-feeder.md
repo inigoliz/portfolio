@@ -63,5 +63,5 @@ The final algorithm was as simple as:
 
 The algorithm incorporates other features, such as toggle debouncing etc. The full code is available in [my github](https://github.com/ignigoliz/janus/).
 
-
+![Visitor Count](https://komarev.com/ghpvc/?username=janus-hugo&style=pixel&label=VISITOR+COUNT)
 

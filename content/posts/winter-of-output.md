@@ -37,5 +37,5 @@ I'll be having no other income these months so I'll be tremendously grateful ðŸ«
 ### 18th November
 Setup personal blog using Hugo and defined the rules for the Winter of Output.
 
-
+![Visitor Count](https://komarev.com/ghpvc/?username=winter-of-output-hugo&style=pixel&label=VISITOR+COUNT)
 
