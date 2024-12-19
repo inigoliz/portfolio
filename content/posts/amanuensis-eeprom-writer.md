@@ -232,3 +232,5 @@ The shield simply connects certain Arduino Mega pins with certain EEPROM pins. T
 I ordered a custom PCB for my shield, but you can also make your own, as I did for the first prototype:
 
 ![Closeup of the first shield](/portfolio/images/amanuensis-eeprom-interface/shield_prev.png#center "900px")
+
+![Visitor Count](https://komarev.com/ghpvc/?username=amanuensis-hugo&style=pixel&label=VISITOR+COUNT)
