@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Teenygrad Study Notes | Iñigo&#39;s Portfolio</title>
+<meta name="keywords" content="">
+<meta name="description" content="
+
+What happens when you reduce a ML framework all the way to its bare bones? - You get teenygrad.
+In this post, I want to dive into the source code of teenygrad to illustrate the software architecture behind some important concepts of ML-engines like backpropagation and computational graphs.
+It&rsquo;s true that you can go read the code directly (it&rsquo;s not that difficult) but&hellip; why not take a guided tour first? If you enjoyed Karpathy&rsquo;s micrograd, you&rsquo;ll like teenygrad.">
+<meta name="author" content="">
+<link rel="canonical" href="https://ignigoliz.github.io/portfolio/posts/teenygrad-learning-notes/">
+<link crossorigin="anonymous" href="/portfolio/assets/css/stylesheet.d6fcd20a4fb86efa4dfac8ec95da60244cc8871042183da1ef28e3a762ad79c8.css" integrity="sha256-1vzSCk&#43;4bvpN&#43;sjsldpgJEzIhxBCGD2h7yjjp2Ktecg=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://ignigoliz.github.io/portfolio/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ignigoliz.github.io/portfolio/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ignigoliz.github.io/portfolio/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ignigoliz.github.io/portfolio/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ignigoliz.github.io/portfolio/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://ignigoliz.github.io/portfolio/posts/teenygrad-learning-notes/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:url" content="https://ignigoliz.github.io/portfolio/posts/teenygrad-learning-notes/">
+  <meta property="og:site_name" content="Iñigo&#39;s Portfolio">
+  <meta property="og:title" content="Teenygrad Study Notes">
+  <meta property="og:description" content="
+What happens when you reduce a ML framework all the way to its bare bones? - You get teenygrad.
+In this post, I want to dive into the source code of teenygrad to illustrate the software architecture behind some important concepts of ML-engines like backpropagation and computational graphs.
+It’s true that you can go read the code directly (it’s not that difficult) but… why not take a guided tour first? If you enjoyed Karpathy’s micrograd, you’ll like teenygrad.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-12-26T03:51:29+01:00">
+    <meta property="article:modified_time" content="2024-12-26T03:51:29+01:00">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Teenygrad Study Notes">
+<meta name="twitter:description" content="
+
+What happens when you reduce a ML framework all the way to its bare bones? - You get teenygrad.
+In this post, I want to dive into the source code of teenygrad to illustrate the software architecture behind some important concepts of ML-engines like backpropagation and computational graphs.
+It&rsquo;s true that you can go read the code directly (it&rsquo;s not that difficult) but&hellip; why not take a guided tour first? If you enjoyed Karpathy&rsquo;s micrograd, you&rsquo;ll like teenygrad.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://ignigoliz.github.io/portfolio/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Teenygrad Study Notes",
+      "item": "https://ignigoliz.github.io/portfolio/posts/teenygrad-learning-notes/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Teenygrad Study Notes",
+  "name": "Teenygrad Study Notes",
+  "description": "\nWhat happens when you reduce a ML framework all the way to its bare bones? - You get teenygrad.\nIn this post, I want to dive into the source code of teenygrad to illustrate the software architecture behind some important concepts of ML-engines like backpropagation and computational graphs.\nIt\u0026rsquo;s true that you can go read the code directly (it\u0026rsquo;s not that difficult) but\u0026hellip; why not take a guided tour first? If you enjoyed Karpathy\u0026rsquo;s micrograd, you\u0026rsquo;ll like teenygrad.\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "\nWhat happens when you reduce a ML framework all the way to its bare bones? - You get teenygrad.\nIn this post, I want to dive into the source code of teenygrad to illustrate the software architecture behind some important concepts of ML-engines like backpropagation and computational graphs.\nIt’s true that you can go read the code directly (it’s not that difficult) but… why not take a guided tour first? If you enjoyed Karpathy’s micrograd, you’ll like teenygrad.\nWhat is Teenygrad? It is a minimalistic ML framework. It does not aim to be production-grade but to illustrate the core ideas behind ML frameworks: tensor arithmetics, computational graphs and automatic differentiation.\nteenygrad has a big brother: tinygrad. They both build on top of the same philosophy, but tinygrad aims to be production-grade: it includes computation graph optimizations, JIT, lazy computation and device-specific kernel generation.\nteenygrad also has a smaller brother: Karpathy’s micrograd, the differences being that micrograd is value-based while teenygrad is array-based, and that teenygrad implements a more pulished software architecture, which is what I want to discuss in this post.\nTensors Arithmetics The core data structure in teenygrad is the Tensor object. A tensor is like a Numpy ndarray. Like in other frameworks, tensors have .shape, .dtype and .device properties.\nfrom teenygrad.tensor import Tensor x = Tensor.ones((1, 3, 16, 16)) print(x.shape) # (1, 3, 16, 16) print(x.dtype) # dtypes.float print(x.device) # 'CPU' Tensors can be operated through regular arithmetics:\na = Tensor([[1, 2], [3, 4]]) b = Tensor([[5, 6], [7, 8]]) (a + b).numpy() # array([[ 6., 8.], [10., 12.]], dtype=float32) (a * b).numpy() # array([[ 5., 12.], [21., 32.]], dtype=float32) (a @ b).numpy() # array([[19., 22.], [43., 50.]], dtype=float32) More complex operations are also available:\nx = Tensor.ones(2,) w = Tensor.ones(2, 3) b = Tensor.ones(3) y = x.linear(weight=w, bias=b) # array([3., 3., 3.], dtype=float32) Tensors may also store gradients in their .grad property after a backward pass is run:\na = Tensor.rand((2, 3), requires_grad=True) y = a.sum() y.backward() a.grad.numpy() # array([[1., 1., 1.], # [1., 1., 1.]], dtype=float32) The Computational Graph Operations on tensors record a Computational Graph. The computational graph holds the information used by the autograd engine to run the backward pass and compute the gradients of each tensor involved.\nIn particular, each tensor holds a context property ._ctx that refers to the math operation that created the tensor:\na = Tensor.ones((2), requires_grad=True) b = Tensor.ones((2), requires_grad=True) c = a + b print(c._ctx) # There are a couple of things to mention about the previous code:\nTensors without requires_grad=True are not added to the computational graph. The _ctx holds an instance of the mlops.Add object. At this point I was wondering… what’s the need of an instance of mlops.Add in ._ctx? The answer is that, in teenygrad, operations themselves are stateful. This makes sense, since they need to store certain information in order to run the backward pass (we’ll come back to this point later).\nOperations store references to to the tensors that spawned the operation itself. These are called the parents of the operation:\na = Tensor.ones((2), requires_grad=True) # id(a): 4403513344 b = Tensor.ones((2), requires_grad=True) # id(b): 4403663552 c = a + b [id(p) for p in c._ctx.parents] # [4403666432, 4403672192] Recap so far:\nTensors have a ._ctx property that points to an instance of an operation. Operations have a .parents property that points to the tensors that created it (the inputs of the operation). These links between tensors and operations, repeated, create a graph that describes the full computation. This is The Computational Graph.\nVisualizing Computational Graphs Let’s visualize some computational graphs:\nI have put together the following code to visualize computational graphs. It’s an adaptation of Karpathy’s code in micrograd/trace_graph.ipynb.\nfrom graphviz import Digraph def trace(root): nodes, edges = set(), set() def build(v): if v not in nodes: nodes.add(v) if v._ctx: for child in v._ctx.parents: edges.add((child, v)) build(child) build(root) return nodes, edges def draw_graph(root, show_grads=False, format='svg', rankdir='LR'): \"\"\" format: png | svg | ... rankdir: TB (top to bottom graph) | LR (left to right) \"\"\" assert rankdir in ['LR', 'TB'] nodes, edges = trace(root) dot = Digraph(format=format, graph_attr={'rankdir': rankdir}) #, node_attr={'rankdir': 'TB'}) for n in nodes: grad_label = f\"{n.grad.numpy().item():.2f}\" if n.grad else \"None\" # dot.node(name=str(id(n)), label = \"{ data %.4f | grad %.4f }\" % (n.numpy(), n.grad() if n.grad() is not None else 0.0), shape='record') if show_grads: dot.node(name=str(id(n)), label = f\"data: {n.numpy().item():.2f} | grad: {grad_label}\", shape='record') else: dot.node(name=str(id(n)), label = f\"data: {n.numpy().item():.2f}\", shape='record') if n._ctx: dot.node(name=str(id(n)) + str(id(n._ctx)), label=n._ctx.__class__.__name__) dot.edge(str(id(n)) + str(id(n._ctx)), str(id(n))) for n1, n2 in edges: dot.edge(str(id(n1)), str(id(n2)) + str(id(n2._ctx))) return dot The first visualization is the addition of two tensors. I’ll use tensors with a scalar value for clarity in the visualization:\na = Tensor([0.5], requires_grad=True) b = Tensor([0.8], requires_grad=True) c = a + b draw_graph(c) Next, a linear transformation:\nx = Tensor([1.0], requires_grad=True) w = Tensor([0.5], requires_grad=True) b = Tensor([0.8], requires_grad=True) c = x * w + b draw_graph(c) Note: Python parses a composed operation following the conventional order of operations. c = x * w + b is broken into hidden_tensor = x * w and c = hidden_tensor + b. You can see the instance of hidden_tensor in the graph, even though we have not explicitely defined a variable for it.\nGraphs can get as complex as one wants: tensors can be involved in several operations, there can be residual connections, etc. Note that the resulting computational graph is a DAG (Directed Acyclic graph).\nx1 = Tensor([1.0], requires_grad=True) x2 = Tensor([2.0], requires_grad=True) w = Tensor([0.5], requires_grad=True) b = Tensor([0.8], requires_grad=True) c = x1 * w + x2 * w + b + x2 draw_graph(c) Diving Deeper: Meet the LazyBuffer Since this is a post about the inner workings of teenygrad, we need to dive into the internals of the Tensor object. Right under Tensor, there is the LazyBuffer class, the object that ultimately holds data and operates on it. In fact, Tensor is just a convenient wrapper around LazyBuffer.\nActually, it’s not the first time that we encounter a LazyBuffer. Before, in the image showcasing the attributes of mlops.Add, there was this one:\n_ctx.parents = (\u003cTensor \u003cLB () dtypes.float\u003e on CPU with grad None\u003e, \u003cTensor \u003cLB () dtypes.float\u003e on CPU with grad None\u003e) See that LB? That’s the LazyBuffer within the Tensor. We also see them if we print a Tensor instance. Rather than getting the data, we get the LazyBuffer underneath:\na = Tensor([1.0]) print(a) # ",
+  "wordCount" : "2937",
+  "inLanguage": "en",
+  "datePublished": "2024-12-26T03:51:29+01:00",
+  "dateModified": "2024-12-26T03:51:29+01:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ignigoliz.github.io/portfolio/posts/teenygrad-learning-notes/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Iñigo's Portfolio",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ignigoliz.github.io/portfolio/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ignigoliz.github.io/portfolio/" accesskey="h" title="Iñigo&#39;s Portfolio (Alt + H)">Iñigo&#39;s Portfolio</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Teenygrad Study Notes
+    </h1>
+    <div class="post-meta"><span title='2024-12-26 03:51:29 +0100 CET'>December 26, 2024</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p><img
+    src="/portfolio/images/teenygrad-learning-notes/cover.png" alt="Title image"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<!-- raw HTML omitted -->
+<p>What happens when you reduce a ML framework all the way to its bare bones? - You get <a href="https://github.com/tinygrad/teenygrad"><strong>teenygrad</strong></a>.</p>
+<p>In this post, I want to dive into the source code of teenygrad to illustrate the software architecture behind some important concepts of ML-engines like backpropagation and computational graphs.</p>
+<p>It&rsquo;s true that you can go read the code directly (it&rsquo;s not that difficult) but&hellip; why not take a guided tour first? If you enjoyed Karpathy&rsquo;s <a href="https://www.youtube.com/watch?v=VMj-3S1tku0">micrograd</a>, you&rsquo;ll like teenygrad.</p>
+<h2 id="what-is-teenygrad">What is Teenygrad?<a hidden class="anchor" aria-hidden="true" href="#what-is-teenygrad">#</a></h2>
+<p>It is a minimalistic ML framework. It does not aim to be production-grade but to illustrate the core ideas behind ML frameworks: <strong>tensor arithmetics</strong>, <strong>computational graphs</strong> and <strong>automatic differentiation</strong>.</p>
+<p><strong>teenygrad</strong> has a big brother: <a href=""><strong>tinygrad</strong></a>. They both build on top of the same philosophy, but tinygrad aims to be production-grade: it includes computation graph optimizations, JIT, lazy computation and device-specific kernel generation.</p>
+<p><strong>teenygrad</strong> also has a smaller brother: Karpathy&rsquo;s <a href="https://github.com/karpathy/micrograd">micrograd</a>, the differences being that micrograd is value-based while teenygrad is array-based, and that teenygrad implements a more pulished software architecture, which is what I want to discuss in this post.</p>
+<h2 id="tensors-arithmetics">Tensors Arithmetics<a hidden class="anchor" aria-hidden="true" href="#tensors-arithmetics">#</a></h2>
+<p>The core data structure in teenygrad is the <code>Tensor</code> object. A tensor is like a Numpy <code>ndarray</code>. Like in other frameworks, tensors have <code>.shape</code>, <code>.dtype</code> and <code>.device</code> properties.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> teenygrad.tensor <span style="color:#f92672">import</span> Tensor
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>x <span style="color:#f92672">=</span> Tensor<span style="color:#f92672">.</span>ones((<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">16</span>, <span style="color:#ae81ff">16</span>))
+</span></span><span style="display:flex;"><span>print(x<span style="color:#f92672">.</span>shape) <span style="color:#75715e"># (1, 3, 16, 16)</span>
+</span></span><span style="display:flex;"><span>print(x<span style="color:#f92672">.</span>dtype) <span style="color:#75715e"># dtypes.float</span>
+</span></span><span style="display:flex;"><span>print(x<span style="color:#f92672">.</span>device) <span style="color:#75715e"># &#39;CPU&#39;</span>
+</span></span></code></pre></div><p>Tensors can be operated through regular arithmetics:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> Tensor([[<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>], [<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>]])
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> Tensor([[<span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>], [<span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">8</span>]])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(a <span style="color:#f92672">+</span> b)<span style="color:#f92672">.</span>numpy()
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># array([[ 6., 8.], [10., 12.]], dtype=float32)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(a <span style="color:#f92672">*</span> b)<span style="color:#f92672">.</span>numpy()
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># array([[ 5., 12.], [21., 32.]], dtype=float32)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(a <span style="color:#f92672">@</span> b)<span style="color:#f92672">.</span>numpy()
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># array([[19., 22.], [43., 50.]], dtype=float32)</span>
+</span></span></code></pre></div><p>More complex operations are also available:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>x <span style="color:#f92672">=</span> Tensor<span style="color:#f92672">.</span>ones(<span style="color:#ae81ff">2</span>,)
+</span></span><span style="display:flex;"><span>w <span style="color:#f92672">=</span> Tensor<span style="color:#f92672">.</span>ones(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> Tensor<span style="color:#f92672">.</span>ones(<span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>y <span style="color:#f92672">=</span> x<span style="color:#f92672">.</span>linear(weight<span style="color:#f92672">=</span>w, bias<span style="color:#f92672">=</span>b)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># array([3., 3., 3.], dtype=float32)</span>
+</span></span></code></pre></div><p>Tensors may also store gradients in their <code>.grad</code> property after a backward pass is run:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> Tensor<span style="color:#f92672">.</span>rand((<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>), requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>y <span style="color:#f92672">=</span> a<span style="color:#f92672">.</span>sum()
+</span></span><span style="display:flex;"><span>y<span style="color:#f92672">.</span>backward()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>a<span style="color:#f92672">.</span>grad<span style="color:#f92672">.</span>numpy()
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># array([[1., 1., 1.],</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#        [1., 1., 1.]], dtype=float32)</span>
+</span></span></code></pre></div><h2 id="the-computational-graph">The Computational Graph<a hidden class="anchor" aria-hidden="true" href="#the-computational-graph">#</a></h2>
+<p>Operations on tensors record a <strong>Computational Graph</strong>. The computational graph holds the information used by the autograd engine to run the backward pass and compute the gradients of each tensor involved.</p>
+<p>In particular, each tensor holds a <strong>context</strong> property <code>._ctx</code> that refers to the math operation that created the tensor:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> Tensor<span style="color:#f92672">.</span>ones((<span style="color:#ae81ff">2</span>), requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> Tensor<span style="color:#f92672">.</span>ones((<span style="color:#ae81ff">2</span>), requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>c <span style="color:#f92672">=</span> a <span style="color:#f92672">+</span> b
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(c<span style="color:#f92672">.</span>_ctx)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># &lt;teenygrad.mlops.Add object at 0x10a88d2a0&gt;</span>
+</span></span></code></pre></div><p>There are a couple of things to mention about the previous code:</p>
+<ul>
+<li>Tensors without <code>requires_grad=True</code> are not added to the computational graph.</li>
+<li>The <code>_ctx</code> holds an instance of the <code>mlops.Add</code> object.</li>
+</ul>
+<p>At this point I was wondering&hellip; what&rsquo;s the need of an instance of <code>mlops.Add</code> in <code>._ctx</code>? The answer is that, in teenygrad, operations themselves are stateful. This makes sense, since they need to store certain information in order to run the backward pass (we&rsquo;ll come back to this point later).</p>
+<p><img
+    src="/portfolio/images/teenygrad-learning-notes/add_state.png#center" alt="Screenshot of the state of an Add instance"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<p>Operations store references to to the tensors that spawned the operation itself. These are called the <code>parents</code> of the operation:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> Tensor<span style="color:#f92672">.</span>ones((<span style="color:#ae81ff">2</span>), requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)  <span style="color:#75715e"># id(a): 4403513344</span>
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> Tensor<span style="color:#f92672">.</span>ones((<span style="color:#ae81ff">2</span>), requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)  <span style="color:#75715e"># id(b): 4403663552</span>
+</span></span><span style="display:flex;"><span>c <span style="color:#f92672">=</span> a <span style="color:#f92672">+</span> b
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[id(p) <span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> c<span style="color:#f92672">.</span>_ctx<span style="color:#f92672">.</span>parents]  <span style="color:#75715e"># [4403666432, 4403672192]</span>
+</span></span></code></pre></div><p>Recap so far:</p>
+<ul>
+<li>Tensors have a <code>._ctx</code> property that points to an instance of an operation.</li>
+<li>Operations have a <code>.parents</code> property that points to the tensors that created it (the inputs of the operation).</li>
+</ul>
+<p>These links between tensors and operations, repeated, create a graph that describes the full computation. This is <strong>The Computational Graph</strong>.</p>
+<h3 id="visualizing-computational-graphs">Visualizing Computational Graphs<a hidden class="anchor" aria-hidden="true" href="#visualizing-computational-graphs">#</a></h3>
+<p>Let&rsquo;s visualize some computational graphs:</p>
+<p>I have put together the following code to visualize computational graphs. It&rsquo;s an adaptation of Karpathy&rsquo;s code in <a href="https://github.com/karpathy/micrograd/blob/master/trace_graph.ipynb">micrograd/trace_graph.ipynb</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> graphviz <span style="color:#f92672">import</span> Digraph
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">trace</span>(root):
+</span></span><span style="display:flex;"><span>    nodes, edges <span style="color:#f92672">=</span> set(), set()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">build</span>(v):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> v <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> nodes:
+</span></span><span style="display:flex;"><span>            nodes<span style="color:#f92672">.</span>add(v)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> v<span style="color:#f92672">.</span>_ctx:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">for</span> child <span style="color:#f92672">in</span> v<span style="color:#f92672">.</span>_ctx<span style="color:#f92672">.</span>parents:
+</span></span><span style="display:flex;"><span>                    edges<span style="color:#f92672">.</span>add((child, v))
+</span></span><span style="display:flex;"><span>                    build(child)
+</span></span><span style="display:flex;"><span>    build(root)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> nodes, edges
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">draw_graph</span>(root, show_grads<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, format<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;svg&#39;</span>, rankdir<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;LR&#39;</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    format: png | svg | ...
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    rankdir: TB (top to bottom graph) | LR (left to right)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> rankdir <span style="color:#f92672">in</span> [<span style="color:#e6db74">&#39;LR&#39;</span>, <span style="color:#e6db74">&#39;TB&#39;</span>]
+</span></span><span style="display:flex;"><span>    nodes, edges <span style="color:#f92672">=</span> trace(root)
+</span></span><span style="display:flex;"><span>    dot <span style="color:#f92672">=</span> Digraph(format<span style="color:#f92672">=</span>format, graph_attr<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;rankdir&#39;</span>: rankdir}) <span style="color:#75715e">#, node_attr={&#39;rankdir&#39;: &#39;TB&#39;})</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> n <span style="color:#f92672">in</span> nodes:
+</span></span><span style="display:flex;"><span>        grad_label <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>n<span style="color:#f92672">.</span>grad<span style="color:#f92672">.</span>numpy()<span style="color:#f92672">.</span>item()<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#66d9ef">if</span> n<span style="color:#f92672">.</span>grad <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#34;None&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># dot.node(name=str(id(n)), label = &#34;{ data %.4f | grad %.4f }&#34; % (n.numpy(), n.grad() if n.grad() is not None else 0.0), shape=&#39;record&#39;)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> show_grads:
+</span></span><span style="display:flex;"><span>            dot<span style="color:#f92672">.</span>node(name<span style="color:#f92672">=</span>str(id(n)), label <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;data: </span><span style="color:#e6db74">{</span>n<span style="color:#f92672">.</span>numpy()<span style="color:#f92672">.</span>item()<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> | grad: </span><span style="color:#e6db74">{</span>grad_label<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>, shape<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;record&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            dot<span style="color:#f92672">.</span>node(name<span style="color:#f92672">=</span>str(id(n)), label <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;data: </span><span style="color:#e6db74">{</span>n<span style="color:#f92672">.</span>numpy()<span style="color:#f92672">.</span>item()<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>, shape<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;record&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> n<span style="color:#f92672">.</span>_ctx:
+</span></span><span style="display:flex;"><span>            dot<span style="color:#f92672">.</span>node(name<span style="color:#f92672">=</span>str(id(n)) <span style="color:#f92672">+</span> str(id(n<span style="color:#f92672">.</span>_ctx)), label<span style="color:#f92672">=</span>n<span style="color:#f92672">.</span>_ctx<span style="color:#f92672">.</span>__class__<span style="color:#f92672">.</span>__name__)
+</span></span><span style="display:flex;"><span>            dot<span style="color:#f92672">.</span>edge(str(id(n)) <span style="color:#f92672">+</span> str(id(n<span style="color:#f92672">.</span>_ctx)), str(id(n)))
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> n1, n2 <span style="color:#f92672">in</span> edges:
+</span></span><span style="display:flex;"><span>        dot<span style="color:#f92672">.</span>edge(str(id(n1)), str(id(n2)) <span style="color:#f92672">+</span> str(id(n2<span style="color:#f92672">.</span>_ctx)))
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> dot
+</span></span></code></pre></div><p>The first visualization is the addition of two tensors. I&rsquo;ll use tensors with a scalar value for clarity in the visualization:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> Tensor([<span style="color:#ae81ff">0.5</span>], requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> Tensor([<span style="color:#ae81ff">0.8</span>], requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>c <span style="color:#f92672">=</span> a <span style="color:#f92672">+</span> b
+</span></span><span style="display:flex;"><span>draw_graph(c)
+</span></span></code></pre></div><p><img
+    src="/portfolio/images/teenygrad-learning-notes/graph_add.svg#center" alt="Graph visualization of addition"
+    
+     style="width: 100%; max-width: 400px;"
+    /></p>
+<p>Next, a linear transformation:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>x <span style="color:#f92672">=</span> Tensor([<span style="color:#ae81ff">1.0</span>], requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>w <span style="color:#f92672">=</span> Tensor([<span style="color:#ae81ff">0.5</span>], requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> Tensor([<span style="color:#ae81ff">0.8</span>], requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>c <span style="color:#f92672">=</span> x <span style="color:#f92672">*</span> w <span style="color:#f92672">+</span> b
+</span></span><span style="display:flex;"><span>draw_graph(c)
+</span></span></code></pre></div><p><img
+    src="/portfolio/images/teenygrad-learning-notes/graph_linear.svg#center" alt="Graph visualization of linear"
+    
+     style="width: 100%; max-width: 600px;"
+    /></p>
+<blockquote>
+<p><strong>Note:</strong> Python parses a composed operation following the conventional order of operations. <code>c = x * w + b</code> is broken into <code>hidden_tensor = x * w</code> and <code>c = hidden_tensor + b</code>. You can see the instance of <code>hidden_tensor</code> in the graph, even though we have not explicitely defined a variable for it.</p>
+</blockquote>
+<p>Graphs can get as complex as one wants: tensors can be involved in several operations, there can be residual connections, etc. Note that the resulting computational graph is a DAG (Directed Acyclic graph).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>x1 <span style="color:#f92672">=</span> Tensor([<span style="color:#ae81ff">1.0</span>], requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>x2 <span style="color:#f92672">=</span> Tensor([<span style="color:#ae81ff">2.0</span>], requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>w <span style="color:#f92672">=</span> Tensor([<span style="color:#ae81ff">0.5</span>], requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> Tensor([<span style="color:#ae81ff">0.8</span>], requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>c <span style="color:#f92672">=</span> x1 <span style="color:#f92672">*</span> w <span style="color:#f92672">+</span> x2 <span style="color:#f92672">*</span> w <span style="color:#f92672">+</span> b <span style="color:#f92672">+</span> x2
+</span></span><span style="display:flex;"><span>draw_graph(c)
+</span></span></code></pre></div><p><img
+    src="/portfolio/images/teenygrad-learning-notes/graph_res.svg#center" alt="Graph visualization of residual"
+    
+     style="width: 100%; max-width: 800px;"
+    /></p>
+<h2 id="diving-deeper-meet-the-lazybuffer">Diving Deeper: Meet the <code>LazyBuffer</code><a hidden class="anchor" aria-hidden="true" href="#diving-deeper-meet-the-lazybuffer">#</a></h2>
+<p>Since this is a post about the inner workings of teenygrad, we need to dive into the internals of the <code>Tensor</code> object. Right under <code>Tensor</code>, there is the <code>LazyBuffer</code> class, the object that ultimately holds <em>data</em> and operates on it. In fact, <code>Tensor</code> is just a convenient wrapper around <code>LazyBuffer</code>.</p>
+<p>Actually, it&rsquo;s not the first time that we encounter a <code>LazyBuffer</code>. Before, in the image showcasing the attributes of <code>mlops.Add</code>, there was this one:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>_ctx<span style="color:#f92672">.</span>parents <span style="color:#f92672">=</span> (<span style="color:#f92672">&lt;</span>Tensor <span style="color:#f92672">&lt;</span>LB () dtypes<span style="color:#f92672">.</span>float<span style="color:#f92672">&gt;</span> on CPU <span style="color:#66d9ef">with</span> grad <span style="color:#66d9ef">None</span><span style="color:#f92672">&gt;</span>, <span style="color:#f92672">&lt;</span>Tensor <span style="color:#f92672">&lt;</span>LB () dtypes<span style="color:#f92672">.</span>float<span style="color:#f92672">&gt;</span> on CPU <span style="color:#66d9ef">with</span> grad <span style="color:#66d9ef">None</span><span style="color:#f92672">&gt;</span>)
+</span></span></code></pre></div><p>See that <code>LB</code>? That&rsquo;s the <code>LazyBuffer</code> within the <code>Tensor</code>. We also see them if we print a <code>Tensor</code> instance. Rather than getting the data, we get the <code>LazyBuffer</code> underneath:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> Tensor([<span style="color:#ae81ff">1.0</span>])
+</span></span><span style="display:flex;"><span>print(a)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># &lt;Tensor &lt;LB (1,) dtypes.float&gt; on CPU with grad None&gt;</span>
+</span></span></code></pre></div><p>Let me paste the definition of the <code>LazyBuffer</code> class to make clear that it&rsquo;s there where the <em>actual data</em> is stored (in this case, as a Numpy <code>ndarray</code>):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LazyBuffer</span>:
+</span></span><span style="display:flex;"><span>	device <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;CPU&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">def</span> __init__(self, buf: np<span style="color:#f92672">.</span>ndarray):
+</span></span><span style="display:flex;"><span>	  self<span style="color:#f92672">.</span>_np <span style="color:#f92672">=</span> buf
+</span></span><span style="display:flex;"><span>	  
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@property</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">base</span>(self): <span style="color:#66d9ef">return</span> self
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@property</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">dtype</span>(self): <span style="color:#66d9ef">return</span> dtypes<span style="color:#f92672">.</span>from_np(self<span style="color:#f92672">.</span>_np<span style="color:#f92672">.</span>dtype)
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@property</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">realized</span>(self): <span style="color:#66d9ef">return</span> RawCPUBuffer(self<span style="color:#f92672">.</span>_np)
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@property</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">shape</span>(self): <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>_np<span style="color:#f92672">.</span>shape
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">...</span>
+</span></span></code></pre></div><p>Now, looking at the defintion of the <code>Tensor</code> class it&rsquo;s crystal clear that it is just a wrapper around a <code>LazyBuffer</code> object, stored in its <code>lazydata</code> property:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Tensor</span>:
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@property</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">device</span>(self) <span style="color:#f92672">-&gt;</span> str: <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>lazydata<span style="color:#f92672">.</span>device
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@property</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">shape</span>(self) <span style="color:#f92672">-&gt;</span> Tuple[sint, <span style="color:#f92672">...</span>]: <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>lazydata<span style="color:#f92672">.</span>shape
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@property</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">dtype</span>(self) <span style="color:#f92672">-&gt;</span> DType: <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>lazydata<span style="color:#f92672">.</span>dtype
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">...</span>
+</span></span></code></pre></div><p>At this point you may be wondering why we need tensors in the first place? Well, even if the <code>LazyBuffer</code> holds the data and operates on it, it does not know about computational graphs and backward passes. Those things happen one level of abstraction up, in the <code>Tensor</code> class.</p>
+<p>Now that I&rsquo;ve introduced the <code>LazyBuffer</code>, let&rsquo;s trace down what happens when two tensors are added:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> Tensor([<span style="color:#ae81ff">1.</span>], requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> Tensor([<span style="color:#ae81ff">2.</span>], requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>c <span style="color:#f92672">=</span> a<span style="color:#f92672">+</span>b
+</span></span></code></pre></div><p>The first thing to note is that <code>a + b == a.__add__(b)</code>. In other words, our conventional math notation is just syntactic sugar for and <code>__add__()</code> method call on the <code>Tensor</code> class. We can take a look at what the <code>Tensor.__add__()</code> method looks like:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> __add__(self, x) <span style="color:#f92672">-&gt;</span> Tensor: <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>add(x)
+</span></span></code></pre></div><p>One step deeper&hellip;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add</span>(self, x:Union[Tensor, float], reverse<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>) <span style="color:#f92672">-&gt;</span> Tensor:
+</span></span><span style="display:flex;"><span>	x <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_to_float(x)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> mlops<span style="color:#f92672">.</span>Add<span style="color:#f92672">.</span>apply(<span style="color:#f92672">*</span>self<span style="color:#f92672">.</span>_broadcasted(x, reverse)) <span style="color:#66d9ef">if</span> x<span style="color:#f92672">.</span>__class__ <span style="color:#f92672">is</span> Tensor <span style="color:#f92672">or</span> x <span style="color:#66d9ef">else</span> self
+</span></span></code></pre></div><p>The first time I looked at the <code>mlops.Add</code> definition I got quite confused. I was expecting an <code>.apply(self, x: Tensor) -&gt; Tensor</code> method returning a new <code>Tensor</code>. However, that&rsquo;s not what it looks like:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Add</span>(Function):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">forward</span>(self, x:LazyBuffer, y:LazyBuffer) <span style="color:#f92672">-&gt;</span> LazyBuffer:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> x<span style="color:#f92672">.</span>e(BinaryOps<span style="color:#f92672">.</span>ADD, y)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">backward</span>(self, grad_output:LazyBuffer) <span style="color:#f92672">-&gt;</span> Tuple[Optional[LazyBuffer], Optional[LazyBuffer]]:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> grad_output <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>needs_input_grad[<span style="color:#ae81ff">0</span>] <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">None</span>, \
+</span></span><span style="display:flex;"><span>           grad_output <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>needs_input_grad[<span style="color:#ae81ff">1</span>] <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">None</span>
+</span></span></code></pre></div><p>What&rsquo;s going on then? Let&rsquo;s start by the <code>forward()</code> method, which seems to be like I was expecting: it takes a couple of <code>LazyBuffer</code> (the actual data) and returns a new one. The <code>x.e()</code> stands for <em>evaluate</em>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LazyBuffer</span>:
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">e</span>(self, op, <span style="color:#f92672">*</span>srcs:LazyBuffer):
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> DEBUG <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">1</span>: print(op, self, srcs)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> op <span style="color:#f92672">==</span> UnaryOps<span style="color:#f92672">.</span>NEG: ret <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>self<span style="color:#f92672">.</span>_np
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">elif</span> op <span style="color:#f92672">==</span> UnaryOps<span style="color:#f92672">.</span>EXP2: ret <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>exp2(self<span style="color:#f92672">.</span>_np)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">elif</span> op <span style="color:#f92672">==</span> UnaryOps<span style="color:#f92672">.</span>LOG2: ret <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>log2(self<span style="color:#f92672">.</span>_np)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">elif</span> op <span style="color:#f92672">==</span> UnaryOps<span style="color:#f92672">.</span>SIN: ret <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>sin(self<span style="color:#f92672">.</span>_np)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">elif</span> op <span style="color:#f92672">==</span> UnaryOps<span style="color:#f92672">.</span>SQRT: ret <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>sqrt(self<span style="color:#f92672">.</span>_np)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">elif</span> op <span style="color:#f92672">==</span> BinaryOps<span style="color:#f92672">.</span>ADD: ret <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_np <span style="color:#f92672">+</span> srcs[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>_np
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">elif</span> op <span style="color:#f92672">==</span> BinaryOps<span style="color:#f92672">.</span>SUB: ret <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_np <span style="color:#f92672">-</span> srcs[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>_np
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">elif</span> op <span style="color:#f92672">==</span> BinaryOps<span style="color:#f92672">.</span>MUL: ret <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_np <span style="color:#f92672">*</span> srcs[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>_np
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">elif</span> op <span style="color:#f92672">==</span> BinaryOps<span style="color:#f92672">.</span>DIV: ret <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_np <span style="color:#f92672">/</span> srcs[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>_np
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">elif</span> op <span style="color:#f92672">==</span> BinaryOps<span style="color:#f92672">.</span>MAX: ret <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>maximum(self<span style="color:#f92672">.</span>_np, srcs[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>_np)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">elif</span> op <span style="color:#f92672">==</span> BinaryOps<span style="color:#f92672">.</span>CMPLT: ret <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_np <span style="color:#f92672">&lt;</span> srcs[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>_np
+</span></span><span style="display:flex;"><span>		
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">...</span>
+</span></span></code></pre></div><p>Recap: <code>forward()</code> and <code>backward()</code> wrap calls to the <code>LazyBuffer.e()</code> method, which evaluates operations on the actual data (using Numpy as the backend).</p>
+<p>The question still is&hellip; where is the <code>apply()</code> method?</p>
+<p>The answer is in the function definition: <code>class Add(Function)</code>. All the operations in <code>mlops</code> (like <code>Add</code>) inherit from the <code>Function</code> parent class. I suspected that the <code>Function</code> class has an <code>apply()</code> method that executes the call to <code>.forward()</code>, and that is correct:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Function</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, device:str, <span style="color:#f92672">*</span>tensors:Tensor):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>device <span style="color:#f92672">=</span> device
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>needs_input_grad <span style="color:#f92672">=</span> [t<span style="color:#f92672">.</span>requires_grad <span style="color:#66d9ef">for</span> t <span style="color:#f92672">in</span> tensors]
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>requires_grad <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span> <span style="color:#66d9ef">if</span> any(self<span style="color:#f92672">.</span>needs_input_grad) <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">None</span> <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">None</span> <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>needs_input_grad <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>requires_grad:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>parents <span style="color:#f92672">=</span> tensors
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">forward</span>(self, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs): <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">NotImplementedError</span>(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;forward not implemented for </span><span style="color:#e6db74">{</span>type(self)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">backward</span>(self, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs): <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">RuntimeError</span>(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;backward not implemented for </span><span style="color:#e6db74">{</span>type(self)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@classmethod</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">apply</span>(fxn:Type[Function], <span style="color:#f92672">*</span>x:Tensor, <span style="color:#f92672">**</span>kwargs) <span style="color:#f92672">-&gt;</span> Tensor:
+</span></span><span style="display:flex;"><span>        ctx <span style="color:#f92672">=</span> fxn(x[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>device, <span style="color:#f92672">*</span>x)
+</span></span><span style="display:flex;"><span>        ret <span style="color:#f92672">=</span> Tensor(ctx<span style="color:#f92672">.</span>forward(<span style="color:#f92672">*</span>[t<span style="color:#f92672">.</span>lazydata <span style="color:#66d9ef">for</span> t <span style="color:#f92672">in</span> x], <span style="color:#f92672">**</span>kwargs), device<span style="color:#f92672">=</span>ctx<span style="color:#f92672">.</span>device, requires_grad<span style="color:#f92672">=</span>ctx<span style="color:#f92672">.</span>requires_grad)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ctx<span style="color:#f92672">.</span>requires_grad <span style="color:#f92672">and</span> <span style="color:#f92672">not</span> Tensor<span style="color:#f92672">.</span>no_grad: ret<span style="color:#f92672">.</span>_ctx <span style="color:#f92672">=</span> ctx    <span style="color:#75715e"># used by autograd engine</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> ret
+</span></span></code></pre></div><p>Quite a bit of code, so let&rsquo;s take it in steps.</p>
+<p>See the <code>@classmethod</code>? That is what is called by <code>return mlops.Add.apply(...)</code>. One point that confused me for a while was the presence of <code>fxn</code> in <code>apply(fxn, ...)</code>, instead of the usual <code>self</code>, since the first argument is always a reference to the class itself. For a while I thought that it was some special syntax for class methods, but no. The truth is that, while its custom to name the first argument <code>self</code>, we can name it as we want. For even more clarity, I will rewrite the <code>apply()</code> as follows:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">apply</span>(self:Type[Function], <span style="color:#f92672">*</span>x:Tensor, <span style="color:#f92672">**</span>kwargs) <span style="color:#f92672">-&gt;</span> Tensor:
+</span></span><span style="display:flex;"><span>    ctx <span style="color:#f92672">=</span> self(x[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>device, <span style="color:#f92672">*</span>x)
+</span></span><span style="display:flex;"><span>    lb <span style="color:#f92672">=</span> ctx<span style="color:#f92672">.</span>forward(<span style="color:#f92672">*</span>[t<span style="color:#f92672">.</span>lazydata <span style="color:#66d9ef">for</span> t <span style="color:#f92672">in</span> x], <span style="color:#f92672">**</span>kwargs)
+</span></span><span style="display:flex;"><span>    ret <span style="color:#f92672">=</span> Tensor(lb, device<span style="color:#f92672">=</span>ctx<span style="color:#f92672">.</span>device, requires_grad<span style="color:#f92672">=</span>ctx<span style="color:#f92672">.</span>requires_grad)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ctx<span style="color:#f92672">.</span>requires_grad <span style="color:#f92672">and</span> <span style="color:#f92672">not</span> Tensor<span style="color:#f92672">.</span>no_grad:
+</span></span><span style="display:flex;"><span>        ret<span style="color:#f92672">.</span>_ctx <span style="color:#f92672">=</span> ctx    <span style="color:#75715e"># used by autograd engine</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> ret
+</span></span></code></pre></div><p>It&rsquo;s not difficult to understand whats going on. First, <code>ctx = ...</code> calls the <code>__init__()</code> method of <code>Add</code>, which creates an instance of it and stores it in the <em>context</em> attribute. Then, the <code>.forward()</code> method of the <code>Add</code> class is called, which returns a <code>LazyBuffer</code>, which is then wrapped into a Tensor and assigned to <code>ret</code>. The <code>ret</code> tensor is then given a <code>._ctx</code>, which is the operation that created it with its information to perform backpropagation.</p>
+<p>For example, looking at the definition of the <code>mlops.Mul</code> operation, we can see that it stores the input <code>LazyBuffer</code> in its context, since they are needed for the backward pass:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Mul</span>(Function):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">forward</span>(self, x:LazyBuffer, y:LazyBuffer) <span style="color:#f92672">-&gt;</span> LazyBuffer:
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>x, self<span style="color:#f92672">.</span>y <span style="color:#f92672">=</span> x, y
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> x<span style="color:#f92672">.</span>e(BinaryOps<span style="color:#f92672">.</span>MUL, y)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">backward</span>(self, grad_output:LazyBuffer) <span style="color:#f92672">-&gt;</span> Tuple[Optional[LazyBuffer], Optional[LazyBuffer]]:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>y<span style="color:#f92672">.</span>e(BinaryOps<span style="color:#f92672">.</span>MUL, grad_output) <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>needs_input_grad[<span style="color:#ae81ff">0</span>] <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">None</span>, \
+</span></span><span style="display:flex;"><span>           self<span style="color:#f92672">.</span>x<span style="color:#f92672">.</span>e(BinaryOps<span style="color:#f92672">.</span>MUL, grad_output) <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>needs_input_grad[<span style="color:#ae81ff">1</span>] <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">None</span>
+</span></span></code></pre></div><p>And that&rsquo;s it.</p>
+<p>There is one last mystery to uncover, which is where is the call to <code>mlops.Add.backward()</code>. The answer is in the next section about <strong>The Backward Pass</strong>.</p>
+<h2 id="the-backward-pass">The Backward Pass<a hidden class="anchor" aria-hidden="true" href="#the-backward-pass">#</a></h2>
+<p>If you come from PyTorch, you&rsquo;ll be used to calling <code>loss.backward()</code>, which runs the backward pass and stores in <code>.grad</code> the gradient of the loss with respect to each tensor. teenygrad works in the same way.</p>
+<p>The question is: How does the backward pass work?</p>
+<p>Let&rsquo;s go back to a simple computation: the multiplication of two tensors:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>x <span style="color:#f92672">=</span> Tensor([<span style="color:#ae81ff">1.0</span>], requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>y <span style="color:#f92672">=</span> Tensor([<span style="color:#ae81ff">2.0</span>], requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>z <span style="color:#f92672">=</span> x <span style="color:#f92672">*</span> y
+</span></span><span style="display:flex;"><span>loss <span style="color:#f92672">=</span> z<span style="color:#f92672">.</span>sum()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>loss<span style="color:#f92672">.</span>backward()
+</span></span></code></pre></div><p>This is what the computational graph looks like before and after running <code>loss.backward()</code>:</p>
+<p><img
+    src="/portfolio/images/teenygrad-learning-notes/beforegrad.svg" alt="Before grad"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<p><img
+    src="/portfolio/images/teenygrad-learning-notes/aftergrad.svg" alt="After grad"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<blockquote>
+<p><strong>Note:</strong> In order to plot the previous graph, I had to disable a line in teenygrad&rsquo;s source code (<code>tensor.py:259</code>) that deletes the <code>._ctx</code> once a tensor&rsquo;s grad is set:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">backward</span>(self) <span style="color:#f92672">-&gt;</span> Tensor:
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#75715e"># del t0._ctx</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">return</span> self
+</span></span></code></pre></div></blockquote>
+<p>The <em>backward</em> pass is called as such because it starts running from the last node in the computational graph and propagates the gradients backwards.</p>
+<p>Looking at the graph from the <strong>right to the left</strong>:</p>
+<ul>
+<li>The gradient of the last tensor is 1.0 by construction (<code>dloss/dloss=1</code>).</li>
+<li>The <code>Reshape</code> operation just shuffles data around. Hence, the upstream gradient is just the downstream gradient but shuffled back.</li>
+<li>The <code>Sum</code> operation copies the downstream gradient to its inputs:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>out <span style="color:#f92672">=</span> x + y -&gt; dloss/dx <span style="color:#f92672">=</span> dloss/dout * dout/dx <span style="color:#f92672">=</span> dloss/dout * <span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><ul>
+<li>The <code>Mul</code> operation swaps its inputs and multiplies them by the downstream gradient:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>out <span style="color:#f92672">=</span> x * y -&gt; dloss/dx <span style="color:#f92672">=</span> dloss/dout * dout/dx <span style="color:#f92672">=</span> dloss/dout * y
+</span></span></code></pre></div><h3 id="running-the-backward-pass-manually">Running the Backward Pass Manually<a hidden class="anchor" aria-hidden="true" href="#running-the-backward-pass-manually">#</a></h3>
+<p>Let&rsquo;s run the backward pass manually, step by step, starting from the last node and propagating the gradients back (from the right to the left). We start with a graph with empty gradients:</p>
+<p><img
+    src="/portfolio/images/teenygrad-learning-notes/beforegrad.svg" alt="Before grad"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<p>Steps:</p>
+<ol>
+<li>I&rsquo;ll set <code>loss.grad=Tensor(1)</code> manually.</li>
+<li>To traverse back the <code>Reshape</code> operation I can use <code>loss._ctx.backward()</code> (remember that <code>loss._ctx</code> points to the instance of the <code>Reshape</code> operation which created the <code>loss</code> tensor). Then I can grab <code>loss._ctx.parents</code> and set their gradients manually:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>reshape_op <span style="color:#f92672">=</span> loss<span style="color:#f92672">.</span>_ctx
+</span></span><span style="display:flex;"><span>reshape_parents <span style="color:#f92672">=</span> loss<span style="color:#f92672">.</span>_ctx<span style="color:#f92672">.</span>parents  <span style="color:#75715e"># tuple of a single element</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>grad_lazydata <span style="color:#f92672">=</span> reshape_op<span style="color:#f92672">.</span>backward(loss<span style="color:#f92672">.</span>grad<span style="color:#f92672">.</span>lazydata)  <span style="color:#75715e"># takes lazydata and gives lazydata</span>
+</span></span><span style="display:flex;"><span>reshape_parents[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>grad <span style="color:#f92672">=</span> Tensor(grad_lazydata)
+</span></span></code></pre></div><p><img
+    src="/portfolio/images/teenygrad-learning-notes/graph_interm_1.svg" alt="Before grad"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<ol start="3">
+<li>Traversing back the <code>Sum</code> operation is slightly more cumbersome, since we cannot direclty grab it, so we need to use <code>loss._ctx.parents[0]._ctx</code>. Again, <code>Sum</code> has a single parent.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>sum_op <span style="color:#f92672">=</span> loss<span style="color:#f92672">.</span>_ctx<span style="color:#f92672">.</span>parents[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>_ctx
+</span></span><span style="display:flex;"><span>sum_parents <span style="color:#f92672">=</span> loss<span style="color:#f92672">.</span>_ctx<span style="color:#f92672">.</span>parents[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>_ctx<span style="color:#f92672">.</span>parents  <span style="color:#75715e"># tuple of a single element</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>grad_lazydata <span style="color:#f92672">=</span> sum_op<span style="color:#f92672">.</span>backward(loss<span style="color:#f92672">.</span>grad<span style="color:#f92672">.</span>lazydata) 
+</span></span><span style="display:flex;"><span>sum_parents[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>grad <span style="color:#f92672">=</span> Tensor(grad_lazydata)
+</span></span></code></pre></div><p><img
+    src="/portfolio/images/teenygrad-learning-notes/graph_interm_2.svg" alt="Before grad"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<ol start="4">
+<li>Traversing back the <code>Mul</code> operation is easier. It has two parents, so <code>mul_op.backward()</code> will return two gradients.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>mul_op <span style="color:#f92672">=</span> z<span style="color:#f92672">.</span>_ctx
+</span></span><span style="display:flex;"><span>mul_parents <span style="color:#f92672">=</span> z<span style="color:#f92672">.</span>_ctx<span style="color:#f92672">.</span>parents  <span style="color:#75715e"># tuple of a single element</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>grad_lazydata <span style="color:#f92672">=</span> mul_op<span style="color:#f92672">.</span>backward(z<span style="color:#f92672">.</span>grad<span style="color:#f92672">.</span>lazydata)  <span style="color:#75715e"># tuple of 2 elements</span>
+</span></span><span style="display:flex;"><span>mul_parents[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>grad <span style="color:#f92672">=</span> Tensor(grad_lazydata[<span style="color:#ae81ff">0</span>])
+</span></span><span style="display:flex;"><span>mul_parents[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>grad <span style="color:#f92672">=</span> Tensor(grad_lazydata[<span style="color:#ae81ff">1</span>])
+</span></span></code></pre></div><p><img
+    src="/portfolio/images/teenygrad-learning-notes/graph_interm_3.svg#center" alt="Before grad"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<p>That was easy! It was always the same pattern:</p>
+<ul>
+<li>From a given <code>node</code>, grab <code>node._ctx</code> and call <code>node._ctx.backward(node.grad.lazydata)</code>.</li>
+<li>Grab <code>node._ctx.parents</code> and set their gradients.</li>
+</ul>
+<p>Hopefully now the following extract from the teenygrad source code will not be daunting anymore:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">backward</span>(self) <span style="color:#f92672">-&gt;</span> Tensor:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> self<span style="color:#f92672">.</span>shape <span style="color:#f92672">==</span> tuple(), <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;backward can only be called for scalar tensors, but it has shape </span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>shape<span style="color:#e6db74">}</span><span style="color:#e6db74">)&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># fill in the first grad with one. don&#39;t use Tensor.ones because we don&#39;t need contiguous</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># this is &#34;implicit gradient creation&#34;</span>
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>grad <span style="color:#f92672">=</span> Tensor(<span style="color:#ae81ff">1</span>, device<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>device, requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> t0 <span style="color:#f92672">in</span> reversed(self<span style="color:#f92672">.</span>deepwalk()):
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">assert</span> (t0<span style="color:#f92672">.</span>grad <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>)
+</span></span><span style="display:flex;"><span>      grads <span style="color:#f92672">=</span> t0<span style="color:#f92672">.</span>_ctx<span style="color:#f92672">.</span>backward(t0<span style="color:#f92672">.</span>grad<span style="color:#f92672">.</span>lazydata)
+</span></span><span style="display:flex;"><span>      grads <span style="color:#f92672">=</span> [Tensor(g, device<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>device, requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>) <span style="color:#66d9ef">if</span> g <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> g <span style="color:#f92672">in</span> ([grads] <span style="color:#66d9ef">if</span> len(t0<span style="color:#f92672">.</span>_ctx<span style="color:#f92672">.</span>parents) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">else</span> grads)]
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">for</span> t, g <span style="color:#f92672">in</span> zip(t0<span style="color:#f92672">.</span>_ctx<span style="color:#f92672">.</span>parents, grads):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> g <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span> <span style="color:#f92672">and</span> t<span style="color:#f92672">.</span>requires_grad:
+</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">assert</span> g<span style="color:#f92672">.</span>shape <span style="color:#f92672">==</span> t<span style="color:#f92672">.</span>shape, <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;grad shape must match tensor shape, </span><span style="color:#e6db74">{</span>g<span style="color:#f92672">.</span>shape<span style="color:#e6db74">!r}</span><span style="color:#e6db74"> != </span><span style="color:#e6db74">{</span>t<span style="color:#f92672">.</span>shape<span style="color:#e6db74">!r}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>          t<span style="color:#f92672">.</span>grad <span style="color:#f92672">=</span> g <span style="color:#66d9ef">if</span> t<span style="color:#f92672">.</span>grad <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span> <span style="color:#66d9ef">else</span> (t<span style="color:#f92672">.</span>grad <span style="color:#f92672">+</span> g)
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">del</span> t0<span style="color:#f92672">.</span>_ctx
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> self
+</span></span></code></pre></div><p>There are a couple of details to note:</p>
+<ul>
+<li>Gradients are <strong>accumulated</strong> (notice <code>t.grad + g</code>): when a node participates in several operations, it&rsquo;s gradient comes from all of them.</li>
+<li>After a node is used, it&rsquo;s detached from the graph with <code>del t0._ctx</code>. I don&rsquo;t fully understand why.</li>
+</ul>
+<p>The last question is&hellip; what is <code>self.deepwalk()</code>?</p>
+<h3 id="topological-sort">Topological Sort<a hidden class="anchor" aria-hidden="true" href="#topological-sort">#</a></h3>
+<p>There is anotehr important ingredient in an autograd engine: an algorithm to organize the order in which each node should propagate its gradient back. This is important because a node must have its gradient set before being able to propagate to the previous ones. This algorithm is <strong>Topological Sort</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>Given a DAG, Topological Sort organizes the nodes into a list such that every node appears after all its dependencies.
+</span></span></code></pre></div><p>Topological Sort is implemented in <code>def deepwalk()</code>. It&rsquo;s an standard algorithm so I&rsquo;ll not discuss it much:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">deepwalk</span>(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_deepwalk</span>(node, visited, nodes):
+</span></span><span style="display:flex;"><span>      visited<span style="color:#f92672">.</span>add(node)
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> getattr(node, <span style="color:#e6db74">&#34;_ctx&#34;</span>, <span style="color:#66d9ef">None</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> node<span style="color:#f92672">.</span>_ctx<span style="color:#f92672">.</span>parents:
+</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">if</span> i <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> visited: _deepwalk(i, visited, nodes)
+</span></span><span style="display:flex;"><span>        nodes<span style="color:#f92672">.</span>append(node)
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> nodes
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> _deepwalk(self, set(), [])
+</span></span></code></pre></div><p>Instead, let&rsquo;s see it in action. For the following graph (where I&rsquo;ll use each node&rsquo;s data as its identifier, since they are all different):</p>
+<p><img
+    src="/portfolio/images/teenygrad-learning-notes/toposort.svg#center" alt="Before grad"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<p>This is the output of <code>deepwalk()</code>, called on the last node:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>[<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">13</span>]
+</span></span></code></pre></div><p>We just need to reverse the order ov the list, and that is the order in which we call the <code>.backward()</code> on each node.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">backward</span>(self) <span style="color:#f92672">-&gt;</span> Tensor:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> t0 <span style="color:#f92672">in</span> reversed(self<span style="color:#f92672">.</span>deepwalk()):
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">...</span>
+</span></span></code></pre></div><h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>These Study Notes do not aim to be an exhaustive discussion of teenygrad but to illustrate a few of its concepts. However, after reading these notes I hope approaching the source code of teenygrad to dig more becomes way easier. Also, having a clear picture of the code architecture of teenygrad is important to approach it&rsquo;s bigger (and more complex) brother <a href="https://github.com/tinygrad/tinygrad">tinygrad</a>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="https://ignigoliz.github.io/portfolio/">Iñigo&#39;s Portfolio</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
