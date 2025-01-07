@@ -538,6 +538,4 @@ def backward(self) -> Tensor:
 ## Conclusion
 These Study Notes do not aim to be an exhaustive discussion of teenygrad but to illustrate a few of its concepts. However, after reading these notes I hope approaching the source code of teenygrad to dig more becomes way easier. Also, having a clear picture of the code architecture of teenygrad is important to approach it's bigger (and more complex) brother [tinygrad](https://github.com/tinygrad/tinygrad).
 
-
-
-
+![Visitor Count](https://komarev.com/ghpvc/?username=teenygrad-notes&style=pixel&label=VISITOR+COUNT)
