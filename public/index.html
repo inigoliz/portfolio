@@ -103,18 +103,14 @@
         </ul>
     </nav>
 </header>
-<main class="main"> 
-<article class="first-entry home-info">
-    <header class="entry-header">
+<main class="main"><div class="profile">
+    <div class="profile_inner">
+        <img draggable="false" src="http://localhost:1313/images/me.jpg" alt="Me" title="Me"
+            height="250" width="250" />
         <h1>¡Hola! - I&rsquo;m Iñigo</h1>
-    </header>
-    <div class="entry-content">
-        👋 Welcome to my portfolio. I am a physicist and a maker. I enjoy hacking, coding and creating.<br>
-I&rsquo;m currently engaged in the <a href="./posts/winter-of-output">Winter of Output</a>.<br>
-It was inspired by Andy Kong&rsquo;s <a href="https://andykong.org/projects/yearofoutput/">Year of Output</a>.
-    </div>
-    <footer class="entry-footer">
-        <div class="social-icons" >
+        <span>👋 Welcome to my portfolio.<br>
+I am a physicist and a maker. I enjoy hacking, coding and creating.<br>
+I&rsquo;m currently engaged in the <a href="./posts/winter-of-output"><strong>Winter of Output</strong></a>.</span><div class="social-icons" >
     <a href="https://github.com/ignigoliz" target="_blank" rel="noopener noreferrer me"
         title="View My GitHub">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -124,12 +120,11 @@ It was inspired by Andy Kong&rsquo;s <a href="https://andykong.org/projects/year
     </path>
 </svg>
     </a>
-    <a href="https://x.com/IgnigoLiz" target="_blank" rel="noopener noreferrer me"
+    <a href="https://bsky.app/profile/ignigoliz.bsky.social" target="_blank" rel="noopener noreferrer me"
         title="View My X/Twitter Profile">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 320" fill="currentColor">
     <path
-        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z">
-    </path>
+        d="M180 141.964C163.699 110.262 119.308 51.1817 78.0347 22.044C38.4971 -5.86834 23.414 -1.03207 13.526 3.43594C2.08093 8.60755 0 26.1785 0 36.5164C0 46.8542 5.66748 121.272 9.36416 133.694C21.5786 174.738 65.0603 188.607 105.104 184.156C107.151 183.852 109.227 183.572 111.329 183.312C109.267 183.642 107.19 183.924 105.104 184.156C46.4204 192.847 -5.69621 214.233 62.6582 290.33C137.848 368.18 165.705 273.637 180 225.702C194.295 273.637 210.76 364.771 295.995 290.33C360 225.702 313.58 192.85 254.896 184.158C252.81 183.926 250.733 183.645 248.671 183.315C250.773 183.574 252.849 183.855 254.896 184.158C294.94 188.61 338.421 174.74 350.636 133.697C354.333 121.275 360 46.8568 360 36.519C360 26.1811 357.919 8.61012 346.474 3.43851C336.586 -1.02949 321.503 -5.86576 281.965 22.0466C240.692 51.1843 196.301 110.262 180 141.964Z" />
 </svg>
     </a>
     <a href="https://www.linkedin.com/in/inigo-lara-psi/" target="_blank" rel="noopener noreferrer me"
@@ -151,82 +146,16 @@ It was inspired by Andy Kong&rsquo;s <a href="https://andykong.org/projects/year
     </a>
 </div>
 
-    </footer>
-</article>
+        <div class="buttons">
+            <a class="button" href="/posts/" rel="noopener" title="Portfolio">
+                <span class="button-inner">
+                    Portfolio
+                </span>
+            </a>
+        </div>
+    </div>
+</div>
 
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Teenygrad Study Notes
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>
-What happens when you reduce a ML framework all the way to its bare bones? - You get teenygrad.
-In this post, I want to dive into the source code of teenygrad to illustrate the software architecture behind some important concepts of ML-engines like backpropagation and computational graphs.
-It’s true that you can go read the code directly (it’s not that difficult) but… why not take a guided tour first? If you enjoyed Karpathy’s micrograd, you’ll like teenygrad.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2024-12-26 03:51:29 +0100 CET'>December 26, 2024</span></footer>
-  <a class="entry-link" aria-label="post link to Teenygrad Study Notes" href="http://localhost:1313/posts/teenygrad-learning-notes/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Minimalistic EEPROM programmer
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>
-What is it? A command-line tool to interact with a 28c256 256KB EEPROM, which is the one used in Ben Eater’s 6502 pc. Allows reading contents from the EEPROM and writing data to it.
-Note: The command used to drive the EEPROM isnuensis. It is named after the Amanuensis monks, which provided services as scribes.
-Check the project on Github to make your own!
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2024-12-10 14:27:41 +0100 CET'>December 10, 2024</span></footer>
-  <a class="entry-link" aria-label="post link to Minimalistic EEPROM programmer" href="http://localhost:1313/posts/amanuensis-eeprom-interface/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Automatic Cat Feeder
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>
-What is it? A camera-controlled cat feeder that only exposes the food when a certain pet is around.
-Motivation I have two cats: one is black and slim and the other is white and chubby. The black one is called Lilo. The white one, Coco.
-The problem is that Coco eats Lilo’s wet food. I’ve built an automatic pet feeder that only exposes the food when Lilo approaches, thus stopping Coco from eating it.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2024-11-27 12:36:05 +0100 CET'>November 27, 2024</span></footer>
-  <a class="entry-link" aria-label="post link to Automatic Cat Feeder" href="http://localhost:1313/posts/janus-cat-feeder/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Winter of Output
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>
-It’s November 18th. Winter is already making an appearance here in Scandinavia. My hands start to get cold when I bike home, the few leaves that remain in the trees are falling, and the darkness arrives before the workday is over. Recently, I quit my job because it didn’t fullfil me and, for once, I’ve decided not to rush-into-the-next-thing. I’ve decided that, for the next 4 months, I will encourage my own creativity and see where it brings me. I’ll try to build my next thing. I’ve called this period… the Winter of Output (inspired by Andy Kong’s Year of Output).
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2024-11-18 19:07:28 +0100 CET'>November 18, 2024</span></footer>
-  <a class="entry-link" aria-label="post link to Winter of Output" href="http://localhost:1313/posts/winter-of-output/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Intercepting USB I need a way to intercept USB communication that I know is happening (because the Coral is a USB Stick). I could try to re-build the runtime library that handles the Coral device. However, re-building is impossible because of outdated build script and conflicting dependencies. I have to deal with the libedgetpu.dylib directly. How can I intercept the information sent over USB? With otool I can see that libedgetpu.dylib uses libusb.dylib, which is also installed with it. Can I intercept the methods of libusb.dylib being called and dump the contents to the console? I actually have access to libusb. I can build a custom version with printf statements and link libedgetpu.dylib against my modified version. I tried intercepting the symbols directly (dlsym(RTLD_NEXT, &#34;libusb_control_transfer&#34;))) but it was not so easy to run because I am using the Python bindings instead of the C&#43;&#43; interface. I have access to the libedgetpu source code so I can see what libusb methods are being used: libusb_control_transfer(), libusb_bulk_transfer(), and libusb_interrupt_transfer(). Also libusb_submit_transfer. Analyzing USB Data No bulk transfers seen when running the example code. Poke libusb_submit_transfer() which triggers an async USB transfer. Each Control Transfer triggers a Submit Transfer (I see both entry methods called in the console prints). It seems that sync. Control Transfers are implemented as type=0 Submit Transfers, type which corresponds to Control Transfers. I suspect that the synchronicity is achieved through a blocking call. Analyzing the Structure of the Transfer of Some Data The first time the Coral is connected, it shows like a generic device. Only after running some code on it, it shows as Coral on USB. Analyzing the intercepted USB data upon a call to edgetpu.load_edgetpu_delegate(), one can see how apex_latest_single_ep.bin is sent to the device through Control Transfers. Afterwards, some further transfers take place. Some of the transfers are Submit Transfers through interface 0x81, meaning that the Host is sending data back to the Device. Comparing the interface load sent data with the data sent when running inference, the structure shows 3 clearly distinct parts: device initialization, image and model transfer and output readout, and device shutdown. The shutdown sequence is the same for load firmware and inference run; the setup sequence is not. Single inference on Vireo and Macaw only show differences in the data related to the tensor being transferred. They show the same initialization and shutdown patterns, as well as mode weight transfer. </p>
-  </div>
-  <footer class="entry-footer"></footer>
-  <a class="entry-link" aria-label="post link to " href="http://localhost:1313/posts/notes-while-hacking-the-coral/"></a>
-</article>
     </main>
     
 <footer class="footer">

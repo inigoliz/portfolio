@@ -4,25 +4,40 @@ title: Iñigo's Portfolio
 theme: ["PaperMod"]
 
 params:
-  homeInfoParams:
-    Title: ¡Hola! - I'm Iñigo
-    Content: 👋 Welcome to my portfolio. I am a physicist and a maker. I enjoy hacking, coding and creating.\              
-              
-              I'm currently engaged in the [Winter of Output](./posts/winter-of-output).\
+  profileMode:
+      enabled: true
+      title: "¡Hola! - I'm Iñigo"
+      subtitle: "👋 Welcome to my portfolio. \ 
 
-              It was inspired by Andy Kong's [Year of Output](https://andykong.org/projects/yearofoutput/).
+      I am a physicist and a maker. I enjoy hacking, coding and creating. \ 
+
+      I'm currently engaged in the [**Winter of Output**](./posts/winter-of-output)."
+      imageUrl: "/images/me.jpg"
+      imageTitle: "Me"
+      imageWidth: 250 # custom size
+      imageHeight: 250 # custom size
+      buttons:
+        - name: Portfolio
+          url: "/posts/"
+
+  # homeInfoParams:
+  #   Title: ¡Hola! - I'm Iñigo
+  #   Content: 👋 Welcome to my portfolio. I am a physicist and a maker. I enjoy hacking, coding and creating.\              
+              
+  #             I'm currently engaged in the [Winter of Output](./posts/winter-of-output).\
+
+  #             It was inspired by Andy Kong's [Year of Output](https://andykong.org/projects/yearofoutput/).
 
   socialIcons:
     - name: github
       title: View my GitHub
       url: https://github.com/ignigoliz
-    - name: X
+    - name: Bluesky
       title: View my X/Twitter profile
-      url: https://x.com/IgnigoLiz
+      url: https://bsky.app/profile/ignigoliz.bsky.social
     - name: linkedin
       title: View my Linkedin profile
       url: https://www.linkedin.com/in/inigo-lara-psi/
     - name: kofi
       title: Buy me a coffee!
-      url: https://ko-fi.com/inigolara
-  
+      url: https://ko-fi.com/inigolara  
