@@ -4,7 +4,7 @@ draft: false
 title: 'Minimalistic EEPROM programmer'
 slug: amanuensis-eeprom-interface
 ---
-![Amanuensis Header Art](/portfolio/images/amanuensis-eeprom-interface/amanuensis_header.png#center "700px")
+![(Amanuensis Header Art)](/images/amanuensis-eeprom-interface/amanuensis_header.png#center "700px")
 
 ---
 ## What is it?
@@ -13,7 +13,7 @@ A command-line tool to interact with a 28c256 256KB EEPROM, which is the one use
 [Ben Eater's 6502 pc](https://www.youtube.com/watch?v=LnzuMJLZRdU&list=PLowKtXNTBypFbtuVMUVXNR0z1mu7dp7eH&index=1).
 Allows reading contents from the EEPROM and writing data to it.
 
-![Reading EEPROM preview](/portfolio/images/amanuensis-eeprom-interface/read_range_presentation.png#center "700px")
+![(Reading EEPROM preview)](/images/amanuensis-eeprom-interface/read_range_presentation.png#center "700px")
 
 > **Note:** The command used to drive the EEPROM is`nuensis`. It is named after the Amanuensis monks, which provided services as scribes.
 
@@ -35,7 +35,7 @@ So, **I decided to build it**.
 
 > **Note:** The core of the 8-bit pc is the 6502 microprocessor, a mythical chip that powered devices such as Apple II, NES, Commodore 64, and many others.
 
-![Ben's EEPROM programmer](/portfolio/images/amanuensis-eeprom-interface/eater_setup.png#center "750px")
+![(Ben's EEPROM programmer)](/images/amanuensis-eeprom-interface/eater_setup.png#center "750px")
 
 In particular, the reasons that make interacting with the EEPROM a painful process are the following:
 
@@ -51,15 +51,15 @@ My solution:
 
 1. A CLI Tool to control the EEPROM using Terminal commands. One of the commands, `nuensis write --file program.bin`, writes a hexdump to the EEPROM.
 
-![Binary program contents](/portfolio/images/amanuensis-eeprom-interface/program.png#center "700px")
+![(Binary program contents)](/images/amanuensis-eeprom-interface/program.png#center "700px")
 
 2. Other commands allow reading the EEPROM. To read a range of addresses, `nuensis read --range 0000 003f`, which reads addresses `0x000` to `0x003f`. To read a single address, `nuensis read --address 002f`. 
 
-![Gif showing EEPROM reading](/portfolio/images/amanuensis-eeprom-interface/nuensis_read_alone.gif#center "700px")
+![(Gif showing EEPROM reading)](/images/amanuensis-eeprom-interface/nuensis_read_alone.gif#center "700px")
 
 3. The protoboard and the cables are replaced by a custom shield that is plugged directly into the Arduino Mega header.
 Rather than plugging the chip and progressively damaging the pins, a ZIF (Zero Insertion Force) connector grips the EEPROM with delicacy.
-![Closeup of the mounted shield](/portfolio/images/amanuensis-eeprom-interface/shield_full.jpeg#center "500px") 
+![(Closeup of the mounted shield)](/images/amanuensis-eeprom-interface/shield_full.jpeg#center "500px") 
 
 ## How it Works
 
@@ -68,7 +68,7 @@ Arduino executes the low level electric pulses and register conigurations that e
 
 Each time a new command is submitted on the Terminal, a communication schema like the following takes place:
 
-![Closeup of the mounted shield](/portfolio/images/amanuensis-eeprom-interface/schema_2.png#center "650px") 
+![(Closeup of the mounted shield)](/images/amanuensis-eeprom-interface/schema_2.png#center "650px") 
 
 I decided to implement an acknowledgment-based communication structure to make sure that data was sent and received correctly.
 After data is sent, the sender enters a halting state waiting for an acknowledgment (`ACK`) response. This applies to any sent data, except the ACK itself.
@@ -146,7 +146,7 @@ list(c)
 ```
 
 Let's see...
-![Weird behaviour of bytes()](/portfolio/images/amanuensis-eeprom-interface/bytes_weird.png#center "500px")
+![(Weird behaviour of bytes())](/images/amanuensis-eeprom-interface/bytes_weird.png#center "500px")
 
 Ehm... OK. That made me wink. Why 3 elements?
 
@@ -154,7 +154,7 @@ Well, it seems that Python, being *string-o-centric*, interprests the previous s
 
 Why this behaviour? Well, it is because the `bytes()` object is not meant to behave nicely with HEX numbers. It is meant to store *byte strings*.
 
-![Byte string vs normal string](/portfolio/images/amanuensis-eeprom-interface/bytes_strings.png#center "500px")
+![(Byte string vs normal string)](/images/amanuensis-eeprom-interface/bytes_strings.png#center "500px")
 
 I'd like to work with `bytes()` using a constructor like `some_magic_constructor('abcd')`. That way I could treat separately the bytes that compose an address, like `some_magic_constructor('ab' + 'cd')`.
 
@@ -218,19 +218,19 @@ void loop() {
 
 The data that Arduino sends back gets stored in the serial buffer of the pc. Upon executing `port.read()`, the values are fetched one by one until the buffer is exhausted.
 
-![Reading serial data](/portfolio/images/amanuensis-eeprom-interface/write_data.gif#center "500px")
+![(Reading serial data)](/images/amanuensis-eeprom-interface/write_data.gif#center "500px")
 
 
 ## The Shield
 
 The shield simply connects certain Arduino Mega pins with certain EEPROM pins. The EEPROM is delicately held during programming using a ZIF connector (Zero Insertion Force). It also has a couple of LEDs for visual feedback.
 
-![Closeup of the shield](/portfolio/images/amanuensis-eeprom-interface/shield.png#center)
+![(Closeup of the shield)](/images/amanuensis-eeprom-interface/shield.png#center)
 
-![Closeup of the shield](/portfolio/images/amanuensis-eeprom-interface/shield_mounted.jpeg#center "400px")
+![(Closeup of the shield)](/images/amanuensis-eeprom-interface/shield_mounted.jpeg#center "400px")
 
 I ordered a custom PCB for my shield, but you can also make your own, as I did for the first prototype:
 
-![Closeup of the first shield](/portfolio/images/amanuensis-eeprom-interface/shield_prev.png#center "900px")
+![(Closeup of the first shield)](/images/amanuensis-eeprom-interface/shield_prev.png#center "900px")
 
-![Visitor Count](https://komarev.com/ghpvc/?username=amanuensis-hugo&style=pixel&label=VISITOR+COUNT)
+![(Visitor Count)](https://komarev.com/ghpvc/?username=amanuensis-hugo&style=pixel&label=VISITOR+COUNT)

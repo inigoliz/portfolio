@@ -5,11 +5,35 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>404 Page not found | Iñigo&#39;s Portfolio</title>
+<title>Iñigo&#39;s Portfolio</title>
 <meta name="keywords" content="">
-<meta name="description" content="">
+<meta name="description" content="Intercepting USB
+
+I need a way to intercept USB communication that I know is happening (because the Coral is a USB Stick).
+I could try to re-build the runtime library that handles the Coral device. However, re-building is impossible because of outdated build script and conflicting dependencies.
+I have to deal with the libedgetpu.dylib directly. How can I intercept the information sent over USB?
+With otool I can see that libedgetpu.dylib uses libusb.dylib, which is also installed with it. Can I intercept the methods of libusb.dylib being called and dump the contents to the console?
+I actually have access to libusb. I can build a custom version with printf statements and link libedgetpu.dylib against my modified version.
+I tried intercepting the symbols directly (dlsym(RTLD_NEXT, &quot;libusb_control_transfer&quot;))) but it was not so easy to run because I am using the Python bindings instead of the C&#43;&#43; interface.
+I have access to the libedgetpu source code so I can see what libusb methods are being used: libusb_control_transfer(), libusb_bulk_transfer(),  and libusb_interrupt_transfer(). Also libusb_submit_transfer.
+
+Analyzing USB Data
+
+No bulk transfers seen when running the example code.
+Poke libusb_submit_transfer() which triggers an async USB transfer.
+Each Control Transfer triggers a Submit Transfer (I see both entry methods called in the console prints). It seems that sync. Control Transfers are implemented as type=0 Submit Transfers, type which corresponds to Control Transfers. I suspect that the synchronicity is achieved through a blocking call.
+
+Analyzing the Structure of the Transfer of Some Data
+
+The first time the Coral is connected, it shows like a generic device. Only after running some code on it, it shows as Coral on USB.
+Analyzing the intercepted USB data upon a call to edgetpu.load_edgetpu_delegate(), one can see how apex_latest_single_ep.bin is sent to the device through Control Transfers. Afterwards, some further transfers take place.
+Some of the transfers are Submit Transfers through interface 0x81, meaning that the Host is sending data back to the Device.
+Comparing the interface load sent data with the data sent when running inference, the structure shows 3 clearly distinct parts: device initialization, image and model transfer and output readout, and device shutdown.
+The shutdown sequence is the same for load firmware and inference run; the setup sequence is not.
+Single inference on Vireo and Macaw only show differences in the data related to the tensor being transferred. They show the same initialization and shutdown patterns, as well as mode weight transfer.
+">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/404.html">
+<link rel="canonical" href="http://localhost:1313/posts/notes-while-hacking-the-coral/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.d6fcd20a4fb86efa4dfac8ec95da60244cc8871042183da1ef28e3a762ad79c8.css" integrity="sha256-1vzSCk&#43;4bvpN&#43;sjsldpgJEzIhxBCGD2h7yjjp2Ktecg=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
@@ -18,7 +42,7 @@
 <link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/404.html">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/notes-while-hacking-the-coral/">
 <noscript>
     <style>
         #theme-toggle,
@@ -58,7 +82,7 @@
 </noscript>
 </head>
 
-<body class="list" id="top">
+<body class="" id="top">
 <script>
     if (localStorage.getItem("pref-theme") === "dark") {
         document.body.classList.add('dark');
@@ -102,7 +126,51 @@
     </nav>
 </header>
 <main class="main">
-<div class="not-found">404</div>
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      
+    </h1>
+    <div class="post-meta">
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="intercepting-usb">Intercepting USB<a hidden class="anchor" aria-hidden="true" href="#intercepting-usb">#</a></h2>
+<ul>
+<li>I need a way to intercept USB communication that I know is happening (because the Coral is a USB Stick).</li>
+<li>I could try to re-build the runtime library that handles the Coral device. However, re-building is impossible because of outdated build script and conflicting dependencies.</li>
+<li>I have to deal with the <code>libedgetpu.dylib</code> directly. How can I intercept the information sent over USB?</li>
+<li>With <code>otool</code> I can see that <code>libedgetpu.dylib</code> uses <code>libusb.dylib</code>, which is also installed with it. Can I intercept the methods of <code>libusb.dylib</code> being called and dump the contents to the console?</li>
+<li>I actually have access to <code>libusb</code>. I can build a custom version with <code>printf</code> statements and link <code>libedgetpu.dylib</code> against my modified version.</li>
+<li>I tried intercepting the symbols directly (<code>dlsym(RTLD_NEXT, &quot;libusb_control_transfer&quot;))</code>) but it was not so easy to run because I am using the Python bindings instead of the C++ interface.</li>
+<li>I have access to the <code>libedgetpu</code> source code so I can see what <code>libusb</code> methods are being used: <code>libusb_control_transfer()</code>, <code>libusb_bulk_transfer()</code>,  and <code>libusb_interrupt_transfer()</code>. Also <code>libusb_submit_transfer</code>.</li>
+</ul>
+<h2 id="analyzing-usb-data">Analyzing USB Data<a hidden class="anchor" aria-hidden="true" href="#analyzing-usb-data">#</a></h2>
+<ul>
+<li>No bulk transfers seen when running the example code.</li>
+<li>Poke <code>libusb_submit_transfer()</code> which triggers an async USB transfer.</li>
+<li>Each Control Transfer triggers a Submit Transfer (I see both entry methods called in the console prints). It seems that sync. Control Transfers are implemented as <code>type=0</code> Submit Transfers, type which corresponds to Control Transfers. I suspect that the synchronicity is achieved through a blocking call.</li>
+</ul>
+<h2 id="analyzing-the-structure-of-the-transfer-of-some-data">Analyzing the Structure of the Transfer of Some Data<a hidden class="anchor" aria-hidden="true" href="#analyzing-the-structure-of-the-transfer-of-some-data">#</a></h2>
+<ul>
+<li>The first time the Coral is connected, it shows like a generic device. Only after running some code on it, it shows as Coral on USB.</li>
+<li>Analyzing the intercepted USB data upon a call to <code>edgetpu.load_edgetpu_delegate()</code>, one can see how <code>apex_latest_single_ep.bin</code> is sent to the device through Control Transfers. Afterwards, some further transfers take place.</li>
+<li>Some of the transfers are Submit Transfers through interface 0x81, meaning that the Host is sending data back to the Device.</li>
+<li>Comparing the interface load sent data with the data sent when running inference, the structure shows 3 clearly distinct parts: device initialization, image and model transfer and output readout, and device shutdown.</li>
+<li>The shutdown sequence is the same for load firmware and inference run; the setup sequence is not.</li>
+<li>Single inference on Vireo and Macaw only show differences in the data related to the tensor being transferred. They show the same initialization and shutdown patterns, as well as mode weight transfer.</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
     </main>
     
 <footer class="footer">

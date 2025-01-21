@@ -4,8 +4,8 @@ draft: false
 title: Teenygrad Study Notes
 slug: teenygrad-learning-notes
 ---
-![Title image](/portfolio/images/teenygrad-learning-notes/cover.png "700px")
-<!-- ![Title image](/portfolio/images/teenygrad-learning-notes/big_graph.svg "700px") -->
+![(Cover image)](/images/teenygrad-learning-notes/cover.png "700px")
+<!-- ![Title image](/images/teenygrad-learning-notes/big_graph.svg "700px") -->
 
 What happens when you reduce a ML framework all the way to its bare bones? - You get [**teenygrad**](https://github.com/tinygrad/teenygrad).
 
@@ -90,7 +90,7 @@ There are a couple of things to mention about the previous code:
 
 At this point I was wondering... what's the need of an instance of `mlops.Add` in `._ctx`? The answer is that, in teenygrad, operations themselves are stateful. This makes sense, since they need to store certain information in order to run the backward pass (we'll come back to this point later).
 
-![Screenshot of the state of an Add instance](/portfolio/images/teenygrad-learning-notes/add_state.png#center "700px")
+![(Screenshot of the state of an Add instance)](/images/teenygrad-learning-notes/add_state.png#center "700px")
 
 Operations store references to to the tensors that spawned the operation itself. These are called the `parents` of the operation:
 
@@ -166,7 +166,7 @@ c = a + b
 draw_graph(c)
 ```
 
-![Graph visualization of addition](/portfolio/images/teenygrad-learning-notes/graph_add.svg#center  "400px")
+![(Graph visualization of addition)](/images/teenygrad-learning-notes/graph_add.svg#center  "400px")
 
 Next, a linear transformation:
 
@@ -179,7 +179,7 @@ c = x * w + b
 draw_graph(c)
 ```
 
-![Graph visualization of linear](/portfolio/images/teenygrad-learning-notes/graph_linear.svg#center  "600px")
+![(Graph visualization of linear)](/images/teenygrad-learning-notes/graph_linear.svg#center  "600px")
 
 > **Note:** Python parses a composed operation following the conventional order of operations. `c = x * w + b` is broken into `hidden_tensor = x * w` and `c = hidden_tensor + b`. You can see the instance of `hidden_tensor` in the graph, even though we have not explicitely defined a variable for it.
 
@@ -195,7 +195,7 @@ c = x1 * w + x2 * w + b + x2
 draw_graph(c)
 ```
 
-![Graph visualization of residual](/portfolio/images/teenygrad-learning-notes/graph_res.svg#center "800px")
+![(Graph visualization of residual)](/images/teenygrad-learning-notes/graph_res.svg#center "800px")
 
 ## Diving Deeper: Meet the `LazyBuffer`
 Since this is a post about the inner workings of teenygrad, we need to dive into the internals of the `Tensor` object. Right under `Tensor`, there is the `LazyBuffer` class, the object that ultimately holds *data* and operates on it. In fact, `Tensor` is just a convenient wrapper around `LazyBuffer`.
@@ -393,9 +393,9 @@ loss.backward()
 
 This is what the computational graph looks like before and after running `loss.backward()`:
 
-![Before grad](/portfolio/images/teenygrad-learning-notes/beforegrad.svg "700px")
+![(Before grad)](/images/teenygrad-learning-notes/beforegrad.svg "700px")
 
-![After grad](/portfolio/images/teenygrad-learning-notes/aftergrad.svg "700px")
+![(After grad)](/images/teenygrad-learning-notes/aftergrad.svg "700px")
 
 >**Note:** In order to plot the previous graph, I had to disable a line in teenygrad's source code (`tensor.py:259`) that deletes the `._ctx` once a tensor's grad is set:
 >```python
@@ -424,7 +424,7 @@ out = x * y -> dloss/dx = dloss/dout * dout/dx = dloss/dout * y
 
 Let's run the backward pass manually, step by step, starting from the last node and propagating the gradients back (from the right to the left). We start with a graph with empty gradients:
 
-![Before grad](/portfolio/images/teenygrad-learning-notes/beforegrad.svg "700px")
+![(Before grad)](/images/teenygrad-learning-notes/beforegrad.svg "700px")
 
 Steps:
 1. I'll set `loss.grad=Tensor(1)` manually.
@@ -436,7 +436,7 @@ reshape_parents = loss._ctx.parents  # tuple of a single element
 grad_lazydata = reshape_op.backward(loss.grad.lazydata)  # takes lazydata and gives lazydata
 reshape_parents[0].grad = Tensor(grad_lazydata)
 ```
-![Before grad](/portfolio/images/teenygrad-learning-notes/graph_interm_1.svg "700px")
+![(Before grad)](/images/teenygrad-learning-notes/graph_interm_1.svg "700px")
 
 3. Traversing back the `Sum` operation is slightly more cumbersome, since we cannot direclty grab it, so we need to use `loss._ctx.parents[0]._ctx`. Again, `Sum` has a single parent. 
 ```python
@@ -447,7 +447,7 @@ grad_lazydata = sum_op.backward(loss.grad.lazydata)
 sum_parents[0].grad = Tensor(grad_lazydata)
 ```
 
-![Before grad](/portfolio/images/teenygrad-learning-notes/graph_interm_2.svg "700px")
+![(Before grad)](/images/teenygrad-learning-notes/graph_interm_2.svg "700px")
 
 4. Traversing back the `Mul` operation is easier. It has two parents, so `mul_op.backward()` will return two gradients.
 ```python
@@ -459,7 +459,7 @@ mul_parents[0].grad = Tensor(grad_lazydata[0])
 mul_parents[1].grad = Tensor(grad_lazydata[1])
 ```
 
-![Before grad](/portfolio/images/teenygrad-learning-notes/graph_interm_3.svg#center "700px")
+![(Before grad)](/images/teenygrad-learning-notes/graph_interm_3.svg#center "700px")
 
 That was easy! It was always the same pattern:
 - From a given `node`, grab `node._ctx` and call `node._ctx.backward(node.grad.lazydata)`.
@@ -518,7 +518,7 @@ Topological Sort is implemented in `def deepwalk()`. It's an standard algorithm 
 
 Instead, let's see it in action. For the following graph (where I'll use each node's data as its identifier, since they are all different):
 
-![Before grad](/portfolio/images/teenygrad-learning-notes/toposort.svg#center "700px")
+![(Before grad)](/images/teenygrad-learning-notes/toposort.svg#center "700px")
 
 This is the output of `deepwalk()`, called on the last node:
 
@@ -538,4 +538,4 @@ def backward(self) -> Tensor:
 ## Conclusion
 These Study Notes do not aim to be an exhaustive discussion of teenygrad but to illustrate a few of its concepts. However, after reading these notes I hope approaching the source code of teenygrad to dig more becomes way easier. Also, having a clear picture of the code architecture of teenygrad is important to approach it's bigger (and more complex) brother [tinygrad](https://github.com/tinygrad/tinygrad).
 
-![Visitor Count](https://komarev.com/ghpvc/?username=teenygrad-notes&style=pixel&label=VISITOR+COUNT)
+![(Visitor Count)](https://komarev.com/ghpvc/?username=teenygrad-notes&style=pixel&label=VISITOR+COUNT)

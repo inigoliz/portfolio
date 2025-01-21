@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><meta charset="utf-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="noindex, nofollow">
 <title>Teenygrad Study Notes | Iñigo&#39;s Portfolio</title>
 <meta name="keywords" content="">
 <meta name="description" content="
@@ -13,16 +13,16 @@ What happens when you reduce a ML framework all the way to its bare bones? - You
 In this post, I want to dive into the source code of teenygrad to illustrate the software architecture behind some important concepts of ML-engines like backpropagation and computational graphs.
 It&rsquo;s true that you can go read the code directly (it&rsquo;s not that difficult) but&hellip; why not take a guided tour first? If you enjoyed Karpathy&rsquo;s micrograd, you&rsquo;ll like teenygrad.">
 <meta name="author" content="">
-<link rel="canonical" href="https://ignigoliz.github.io/portfolio/posts/teenygrad-learning-notes/">
-<link crossorigin="anonymous" href="/portfolio/assets/css/stylesheet.d6fcd20a4fb86efa4dfac8ec95da60244cc8871042183da1ef28e3a762ad79c8.css" integrity="sha256-1vzSCk&#43;4bvpN&#43;sjsldpgJEzIhxBCGD2h7yjjp2Ktecg=" rel="preload stylesheet" as="style">
-<link rel="icon" href="https://ignigoliz.github.io/portfolio/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://ignigoliz.github.io/portfolio/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://ignigoliz.github.io/portfolio/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://ignigoliz.github.io/portfolio/apple-touch-icon.png">
-<link rel="mask-icon" href="https://ignigoliz.github.io/portfolio/safari-pinned-tab.svg">
+<link rel="canonical" href="http://localhost:1313/posts/teenygrad-learning-notes/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d6fcd20a4fb86efa4dfac8ec95da60244cc8871042183da1ef28e3a762ad79c8.css" integrity="sha256-1vzSCk&#43;4bvpN&#43;sjsldpgJEzIhxBCGD2h7yjjp2Ktecg=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="https://ignigoliz.github.io/portfolio/posts/teenygrad-learning-notes/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/teenygrad-learning-notes/">
 <noscript>
     <style>
         #theme-toggle,
@@ -59,76 +59,7 @@ It&rsquo;s true that you can go read the code directly (it&rsquo;s not that diff
         }
 
     </style>
-</noscript><meta property="og:url" content="https://ignigoliz.github.io/portfolio/posts/teenygrad-learning-notes/">
-  <meta property="og:site_name" content="Iñigo&#39;s Portfolio">
-  <meta property="og:title" content="Teenygrad Study Notes">
-  <meta property="og:description" content="
-What happens when you reduce a ML framework all the way to its bare bones? - You get teenygrad.
-In this post, I want to dive into the source code of teenygrad to illustrate the software architecture behind some important concepts of ML-engines like backpropagation and computational graphs.
-It’s true that you can go read the code directly (it’s not that difficult) but… why not take a guided tour first? If you enjoyed Karpathy’s micrograd, you’ll like teenygrad.">
-  <meta property="og:locale" content="en-us">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2024-12-26T03:51:29+01:00">
-    <meta property="article:modified_time" content="2024-12-26T03:51:29+01:00">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Teenygrad Study Notes">
-<meta name="twitter:description" content="
-
-What happens when you reduce a ML framework all the way to its bare bones? - You get teenygrad.
-In this post, I want to dive into the source code of teenygrad to illustrate the software architecture behind some important concepts of ML-engines like backpropagation and computational graphs.
-It&rsquo;s true that you can go read the code directly (it&rsquo;s not that difficult) but&hellip; why not take a guided tour first? If you enjoyed Karpathy&rsquo;s micrograd, you&rsquo;ll like teenygrad.">
-
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position":  1 ,
-      "name": "Posts",
-      "item": "https://ignigoliz.github.io/portfolio/posts/"
-    }, 
-    {
-      "@type": "ListItem",
-      "position":  2 ,
-      "name": "Teenygrad Study Notes",
-      "item": "https://ignigoliz.github.io/portfolio/posts/teenygrad-learning-notes/"
-    }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "Teenygrad Study Notes",
-  "name": "Teenygrad Study Notes",
-  "description": "\nWhat happens when you reduce a ML framework all the way to its bare bones? - You get teenygrad.\nIn this post, I want to dive into the source code of teenygrad to illustrate the software architecture behind some important concepts of ML-engines like backpropagation and computational graphs.\nIt\u0026rsquo;s true that you can go read the code directly (it\u0026rsquo;s not that difficult) but\u0026hellip; why not take a guided tour first? If you enjoyed Karpathy\u0026rsquo;s micrograd, you\u0026rsquo;ll like teenygrad.\n",
-  "keywords": [
-    
-  ],
-  "articleBody": "\nWhat happens when you reduce a ML framework all the way to its bare bones? - You get teenygrad.\nIn this post, I want to dive into the source code of teenygrad to illustrate the software architecture behind some important concepts of ML-engines like backpropagation and computational graphs.\nIt’s true that you can go read the code directly (it’s not that difficult) but… why not take a guided tour first? If you enjoyed Karpathy’s micrograd, you’ll like teenygrad.\nWhat is Teenygrad? It is a minimalistic ML framework. It does not aim to be production-grade but to illustrate the core ideas behind ML frameworks: tensor arithmetics, computational graphs and automatic differentiation.\nteenygrad has a big brother: tinygrad. They both build on top of the same philosophy, but tinygrad aims to be production-grade: it includes computation graph optimizations, JIT, lazy computation and device-specific kernel generation.\nteenygrad also has a smaller brother: Karpathy’s micrograd, the differences being that micrograd is value-based while teenygrad is array-based, and that teenygrad implements a more pulished software architecture, which is what I want to discuss in this post.\nTensors Arithmetics The core data structure in teenygrad is the Tensor object. A tensor is like a Numpy ndarray. Like in other frameworks, tensors have .shape, .dtype and .device properties.\nfrom teenygrad.tensor import Tensor x = Tensor.ones((1, 3, 16, 16)) print(x.shape) # (1, 3, 16, 16) print(x.dtype) # dtypes.float print(x.device) # 'CPU' Tensors can be operated through regular arithmetics:\na = Tensor([[1, 2], [3, 4]]) b = Tensor([[5, 6], [7, 8]]) (a + b).numpy() # array([[ 6., 8.], [10., 12.]], dtype=float32) (a * b).numpy() # array([[ 5., 12.], [21., 32.]], dtype=float32) (a @ b).numpy() # array([[19., 22.], [43., 50.]], dtype=float32) More complex operations are also available:\nx = Tensor.ones(2,) w = Tensor.ones(2, 3) b = Tensor.ones(3) y = x.linear(weight=w, bias=b) # array([3., 3., 3.], dtype=float32) Tensors may also store gradients in their .grad property after a backward pass is run:\na = Tensor.rand((2, 3), requires_grad=True) y = a.sum() y.backward() a.grad.numpy() # array([[1., 1., 1.], # [1., 1., 1.]], dtype=float32) The Computational Graph Operations on tensors record a Computational Graph. The computational graph holds the information used by the autograd engine to run the backward pass and compute the gradients of each tensor involved.\nIn particular, each tensor holds a context property ._ctx that refers to the math operation that created the tensor:\na = Tensor.ones((2), requires_grad=True) b = Tensor.ones((2), requires_grad=True) c = a + b print(c._ctx) # There are a couple of things to mention about the previous code:\nTensors without requires_grad=True are not added to the computational graph. The _ctx holds an instance of the mlops.Add object. At this point I was wondering… what’s the need of an instance of mlops.Add in ._ctx? The answer is that, in teenygrad, operations themselves are stateful. This makes sense, since they need to store certain information in order to run the backward pass (we’ll come back to this point later).\nOperations store references to to the tensors that spawned the operation itself. These are called the parents of the operation:\na = Tensor.ones((2), requires_grad=True) # id(a): 4403513344 b = Tensor.ones((2), requires_grad=True) # id(b): 4403663552 c = a + b [id(p) for p in c._ctx.parents] # [4403666432, 4403672192] Recap so far:\nTensors have a ._ctx property that points to an instance of an operation. Operations have a .parents property that points to the tensors that created it (the inputs of the operation). These links between tensors and operations, repeated, create a graph that describes the full computation. This is The Computational Graph.\nVisualizing Computational Graphs Let’s visualize some computational graphs:\nI have put together the following code to visualize computational graphs. It’s an adaptation of Karpathy’s code in micrograd/trace_graph.ipynb.\nfrom graphviz import Digraph def trace(root): nodes, edges = set(), set() def build(v): if v not in nodes: nodes.add(v) if v._ctx: for child in v._ctx.parents: edges.add((child, v)) build(child) build(root) return nodes, edges def draw_graph(root, show_grads=False, format='svg', rankdir='LR'): \"\"\" format: png | svg | ... rankdir: TB (top to bottom graph) | LR (left to right) \"\"\" assert rankdir in ['LR', 'TB'] nodes, edges = trace(root) dot = Digraph(format=format, graph_attr={'rankdir': rankdir}) #, node_attr={'rankdir': 'TB'}) for n in nodes: grad_label = f\"{n.grad.numpy().item():.2f}\" if n.grad else \"None\" # dot.node(name=str(id(n)), label = \"{ data %.4f | grad %.4f }\" % (n.numpy(), n.grad() if n.grad() is not None else 0.0), shape='record') if show_grads: dot.node(name=str(id(n)), label = f\"data: {n.numpy().item():.2f} | grad: {grad_label}\", shape='record') else: dot.node(name=str(id(n)), label = f\"data: {n.numpy().item():.2f}\", shape='record') if n._ctx: dot.node(name=str(id(n)) + str(id(n._ctx)), label=n._ctx.__class__.__name__) dot.edge(str(id(n)) + str(id(n._ctx)), str(id(n))) for n1, n2 in edges: dot.edge(str(id(n1)), str(id(n2)) + str(id(n2._ctx))) return dot The first visualization is the addition of two tensors. I’ll use tensors with a scalar value for clarity in the visualization:\na = Tensor([0.5], requires_grad=True) b = Tensor([0.8], requires_grad=True) c = a + b draw_graph(c) Next, a linear transformation:\nx = Tensor([1.0], requires_grad=True) w = Tensor([0.5], requires_grad=True) b = Tensor([0.8], requires_grad=True) c = x * w + b draw_graph(c) Note: Python parses a composed operation following the conventional order of operations. c = x * w + b is broken into hidden_tensor = x * w and c = hidden_tensor + b. You can see the instance of hidden_tensor in the graph, even though we have not explicitely defined a variable for it.\nGraphs can get as complex as one wants: tensors can be involved in several operations, there can be residual connections, etc. Note that the resulting computational graph is a DAG (Directed Acyclic graph).\nx1 = Tensor([1.0], requires_grad=True) x2 = Tensor([2.0], requires_grad=True) w = Tensor([0.5], requires_grad=True) b = Tensor([0.8], requires_grad=True) c = x1 * w + x2 * w + b + x2 draw_graph(c) Diving Deeper: Meet the LazyBuffer Since this is a post about the inner workings of teenygrad, we need to dive into the internals of the Tensor object. Right under Tensor, there is the LazyBuffer class, the object that ultimately holds data and operates on it. In fact, Tensor is just a convenient wrapper around LazyBuffer.\nActually, it’s not the first time that we encounter a LazyBuffer. Before, in the image showcasing the attributes of mlops.Add, there was this one:\n_ctx.parents = (\u003cTensor \u003cLB () dtypes.float\u003e on CPU with grad None\u003e, \u003cTensor \u003cLB () dtypes.float\u003e on CPU with grad None\u003e) See that LB? That’s the LazyBuffer within the Tensor. We also see them if we print a Tensor instance. Rather than getting the data, we get the LazyBuffer underneath:\na = Tensor([1.0]) print(a) # ",
-  "wordCount" : "2937",
-  "inLanguage": "en",
-  "datePublished": "2024-12-26T03:51:29+01:00",
-  "dateModified": "2024-12-26T03:51:29+01:00",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://ignigoliz.github.io/portfolio/posts/teenygrad-learning-notes/"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Iñigo's Portfolio",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://ignigoliz.github.io/portfolio/favicon.ico"
-    }
-  }
-}
-</script>
+</noscript>
 </head>
 
 <body class="" id="top">
@@ -146,7 +77,7 @@ It&rsquo;s true that you can go read the code directly (it&rsquo;s not that diff
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://ignigoliz.github.io/portfolio/" accesskey="h" title="Iñigo&#39;s Portfolio (Alt + H)">Iñigo&#39;s Portfolio</a>
+            <a href="http://localhost:1313/" accesskey="h" title="Iñigo&#39;s Portfolio (Alt + H)">Iñigo&#39;s Portfolio</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -187,7 +118,7 @@ It&rsquo;s true that you can go read the code directly (it&rsquo;s not that diff
 </div>
   </header> 
   <div class="post-content"><p><img
-    src="/portfolio/images/teenygrad-learning-notes/cover.png" alt="Title image"
+    src="/images/teenygrad-learning-notes/cover.png" alt="(Cover image)"
     
      style="width: 100%; max-width: 700px;"
     /></p>
@@ -250,7 +181,7 @@ It&rsquo;s true that you can go read the code directly (it&rsquo;s not that diff
 </ul>
 <p>At this point I was wondering&hellip; what&rsquo;s the need of an instance of <code>mlops.Add</code> in <code>._ctx</code>? The answer is that, in teenygrad, operations themselves are stateful. This makes sense, since they need to store certain information in order to run the backward pass (we&rsquo;ll come back to this point later).</p>
 <p><img
-    src="/portfolio/images/teenygrad-learning-notes/add_state.png#center" alt="Screenshot of the state of an Add instance"
+    src="/images/teenygrad-learning-notes/add_state.png#center" alt="(Screenshot of the state of an Add instance)"
     
      style="width: 100%; max-width: 700px;"
     /></p>
@@ -315,7 +246,7 @@ It&rsquo;s true that you can go read the code directly (it&rsquo;s not that diff
 </span></span><span style="display:flex;"><span>c <span style="color:#f92672">=</span> a <span style="color:#f92672">+</span> b
 </span></span><span style="display:flex;"><span>draw_graph(c)
 </span></span></code></pre></div><p><img
-    src="/portfolio/images/teenygrad-learning-notes/graph_add.svg#center" alt="Graph visualization of addition"
+    src="/images/teenygrad-learning-notes/graph_add.svg#center" alt="(Graph visualization of addition)"
     
      style="width: 100%; max-width: 400px;"
     /></p>
@@ -327,7 +258,7 @@ It&rsquo;s true that you can go read the code directly (it&rsquo;s not that diff
 </span></span><span style="display:flex;"><span>c <span style="color:#f92672">=</span> x <span style="color:#f92672">*</span> w <span style="color:#f92672">+</span> b
 </span></span><span style="display:flex;"><span>draw_graph(c)
 </span></span></code></pre></div><p><img
-    src="/portfolio/images/teenygrad-learning-notes/graph_linear.svg#center" alt="Graph visualization of linear"
+    src="/images/teenygrad-learning-notes/graph_linear.svg#center" alt="(Graph visualization of linear)"
     
      style="width: 100%; max-width: 600px;"
     /></p>
@@ -343,7 +274,7 @@ It&rsquo;s true that you can go read the code directly (it&rsquo;s not that diff
 </span></span><span style="display:flex;"><span>c <span style="color:#f92672">=</span> x1 <span style="color:#f92672">*</span> w <span style="color:#f92672">+</span> x2 <span style="color:#f92672">*</span> w <span style="color:#f92672">+</span> b <span style="color:#f92672">+</span> x2
 </span></span><span style="display:flex;"><span>draw_graph(c)
 </span></span></code></pre></div><p><img
-    src="/portfolio/images/teenygrad-learning-notes/graph_res.svg#center" alt="Graph visualization of residual"
+    src="/images/teenygrad-learning-notes/graph_res.svg#center" alt="(Graph visualization of residual)"
     
      style="width: 100%; max-width: 800px;"
     /></p>
@@ -480,12 +411,12 @@ It&rsquo;s true that you can go read the code directly (it&rsquo;s not that diff
 </span></span><span style="display:flex;"><span>loss<span style="color:#f92672">.</span>backward()
 </span></span></code></pre></div><p>This is what the computational graph looks like before and after running <code>loss.backward()</code>:</p>
 <p><img
-    src="/portfolio/images/teenygrad-learning-notes/beforegrad.svg" alt="Before grad"
+    src="/images/teenygrad-learning-notes/beforegrad.svg" alt="(Before grad)"
     
      style="width: 100%; max-width: 700px;"
     /></p>
 <p><img
-    src="/portfolio/images/teenygrad-learning-notes/aftergrad.svg" alt="After grad"
+    src="/images/teenygrad-learning-notes/aftergrad.svg" alt="(After grad)"
     
      style="width: 100%; max-width: 700px;"
     /></p>
@@ -511,7 +442,7 @@ It&rsquo;s true that you can go read the code directly (it&rsquo;s not that diff
 </span></span></code></pre></div><h3 id="running-the-backward-pass-manually">Running the Backward Pass Manually<a hidden class="anchor" aria-hidden="true" href="#running-the-backward-pass-manually">#</a></h3>
 <p>Let&rsquo;s run the backward pass manually, step by step, starting from the last node and propagating the gradients back (from the right to the left). We start with a graph with empty gradients:</p>
 <p><img
-    src="/portfolio/images/teenygrad-learning-notes/beforegrad.svg" alt="Before grad"
+    src="/images/teenygrad-learning-notes/beforegrad.svg" alt="(Before grad)"
     
      style="width: 100%; max-width: 700px;"
     /></p>
@@ -526,7 +457,7 @@ It&rsquo;s true that you can go read the code directly (it&rsquo;s not that diff
 </span></span><span style="display:flex;"><span>grad_lazydata <span style="color:#f92672">=</span> reshape_op<span style="color:#f92672">.</span>backward(loss<span style="color:#f92672">.</span>grad<span style="color:#f92672">.</span>lazydata)  <span style="color:#75715e"># takes lazydata and gives lazydata</span>
 </span></span><span style="display:flex;"><span>reshape_parents[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>grad <span style="color:#f92672">=</span> Tensor(grad_lazydata)
 </span></span></code></pre></div><p><img
-    src="/portfolio/images/teenygrad-learning-notes/graph_interm_1.svg" alt="Before grad"
+    src="/images/teenygrad-learning-notes/graph_interm_1.svg" alt="(Before grad)"
     
      style="width: 100%; max-width: 700px;"
     /></p>
@@ -539,7 +470,7 @@ It&rsquo;s true that you can go read the code directly (it&rsquo;s not that diff
 </span></span><span style="display:flex;"><span>grad_lazydata <span style="color:#f92672">=</span> sum_op<span style="color:#f92672">.</span>backward(loss<span style="color:#f92672">.</span>grad<span style="color:#f92672">.</span>lazydata) 
 </span></span><span style="display:flex;"><span>sum_parents[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>grad <span style="color:#f92672">=</span> Tensor(grad_lazydata)
 </span></span></code></pre></div><p><img
-    src="/portfolio/images/teenygrad-learning-notes/graph_interm_2.svg" alt="Before grad"
+    src="/images/teenygrad-learning-notes/graph_interm_2.svg" alt="(Before grad)"
     
      style="width: 100%; max-width: 700px;"
     /></p>
@@ -553,7 +484,7 @@ It&rsquo;s true that you can go read the code directly (it&rsquo;s not that diff
 </span></span><span style="display:flex;"><span>mul_parents[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>grad <span style="color:#f92672">=</span> Tensor(grad_lazydata[<span style="color:#ae81ff">0</span>])
 </span></span><span style="display:flex;"><span>mul_parents[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>grad <span style="color:#f92672">=</span> Tensor(grad_lazydata[<span style="color:#ae81ff">1</span>])
 </span></span></code></pre></div><p><img
-    src="/portfolio/images/teenygrad-learning-notes/graph_interm_3.svg#center" alt="Before grad"
+    src="/images/teenygrad-learning-notes/graph_interm_3.svg#center" alt="(Before grad)"
     
      style="width: 100%; max-width: 700px;"
     /></p>
@@ -602,7 +533,7 @@ It&rsquo;s true that you can go read the code directly (it&rsquo;s not that diff
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> _deepwalk(self, set(), [])
 </span></span></code></pre></div><p>Instead, let&rsquo;s see it in action. For the following graph (where I&rsquo;ll use each node&rsquo;s data as its identifier, since they are all different):</p>
 <p><img
-    src="/portfolio/images/teenygrad-learning-notes/toposort.svg#center" alt="Before grad"
+    src="/images/teenygrad-learning-notes/toposort.svg#center" alt="(Before grad)"
     
      style="width: 100%; max-width: 700px;"
     /></p>
@@ -615,6 +546,11 @@ It&rsquo;s true that you can go read the code directly (it&rsquo;s not that diff
 </span></span><span style="display:flex;"><span>        <span style="color:#f92672">...</span>
 </span></span></code></pre></div><h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
 <p>These Study Notes do not aim to be an exhaustive discussion of teenygrad but to illustrate a few of its concepts. However, after reading these notes I hope approaching the source code of teenygrad to dig more becomes way easier. Also, having a clear picture of the code architecture of teenygrad is important to approach it&rsquo;s bigger (and more complex) brother <a href="https://github.com/tinygrad/tinygrad">tinygrad</a>.</p>
+<p><img
+    src="https://komarev.com/ghpvc/?username=teenygrad-notes&amp;style=pixel&amp;label=VISITOR&#43;COUNT" alt="(Visitor Count)"
+    
+    
+    /></p>
 
 
   </div>
@@ -627,7 +563,7 @@ It&rsquo;s true that you can go read the code directly (it&rsquo;s not that diff
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="https://ignigoliz.github.io/portfolio/">Iñigo&#39;s Portfolio</a></span> · 
+        <span>&copy; 2025 <a href="http://localhost:1313/">Iñigo&#39;s Portfolio</a></span> · 
 
     <span>
         Powered by
