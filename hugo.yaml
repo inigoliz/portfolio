@@ -26,10 +26,10 @@ params:
   socialIcons:
     - name: github
       title: View my GitHub
-      url: https://github.com/ignigoliz
+      url: https://github.com/inigoliz
     - name: Bluesky
       title: View my X/Twitter profile
-      url: https://bsky.app/profile/ignigoliz.bsky.social
+      url: https://bsky.app/profile/inigoliz.bsky.social
     - name: linkedin
       title: View my Linkedin profile
       url: https://www.linkedin.com/in/inigo-lara-psi/
