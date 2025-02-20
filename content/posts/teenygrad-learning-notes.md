@@ -3,9 +3,12 @@ date: 2024-12-26T03:51:29+01:00
 draft: false
 title: Teenygrad Study Notes
 slug: teenygrad-learning-notes
+cover:
+  image: "/images/teenygrad-learning-notes/graph_res.svg"
+  alt: "Cover image"
+  relative: false
 ---
 ![(Cover image)](/images/teenygrad-learning-notes/cover.png "700px")
-<!-- ![Title image](/images/teenygrad-learning-notes/big_graph.svg "700px") -->
 
 What happens when you reduce a ML framework all the way to its bare bones? - You get [**teenygrad**](https://github.com/tinygrad/teenygrad).
 

@@ -3,6 +3,10 @@ date: '2024-11-18T19:07:28+01:00'
 draft: false
 title: 'Winter of Output'
 slug: winter-of-output
+cover:
+  image: "/images/DSCF1490.jpg"
+  alt: "Cover image"
+  relative: false
 ---
 ![(Scandinavian winter landscape)](/images/DSCF1490.jpg#center)
 

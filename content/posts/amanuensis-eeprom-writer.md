@@ -3,6 +3,10 @@ date: '2024-12-10T14:27:41+01:00'
 draft: false
 title: 'Minimalistic EEPROM programmer'
 slug: amanuensis-eeprom-interface
+cover:
+  image: "/images/amanuensis-eeprom-interface/shield_full.jpeg"
+  alt: "Cover image"
+  relative: false
 ---
 ![(Amanuensis Header Art)](/images/amanuensis-eeprom-interface/amanuensis_header.png#center "700px")
 
