@@ -4,7 +4,6 @@ title: Iñigo's Portfolio
 theme: ["PaperMod"]
 
 params:
-  ShowBreadCrumbs: true
   ShowCodeCopyButtons: true 
   cover:
     linkFullImages: false
