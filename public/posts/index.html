@@ -103,7 +103,7 @@
     </nav>
 </header>
 <main class="main"> 
-<header class="page-header">
+<header class="page-header"><div class="breadcrumbs"><a href="http://localhost:1313/">Home</a></div>
   <h1>
     Posts
   </h1>
@@ -142,6 +142,8 @@ Check the project on Github to make your own!
 </article>
 
 <article class="post-entry"> 
+<figure class="entry-cover"><img loading="lazy" src="http://localhost:1313/images/janus-cat-feeder/IMG_9995.gif" alt="">
+</figure>
   <header class="entry-header">
     <h2 class="entry-hint-parent">Automatic Cat Feeder
     </h2>
@@ -169,18 +171,6 @@ It’s November 18th. Winter is already making an appearance here in Scandinavia
   </div>
   <footer class="entry-footer"><span title='2024-11-18 19:07:28 +0100 CET'>November 18, 2024</span></footer>
   <a class="entry-link" aria-label="post link to Winter of Output" href="http://localhost:1313/posts/winter-of-output/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Intercepting USB I need a way to intercept USB communication that I know is happening (because the Coral is a USB Stick). I could try to re-build the runtime library that handles the Coral device. However, re-building is impossible because of outdated build script and conflicting dependencies. I have to deal with the libedgetpu.dylib directly. How can I intercept the information sent over USB? With otool I can see that libedgetpu.dylib uses libusb.dylib, which is also installed with it. Can I intercept the methods of libusb.dylib being called and dump the contents to the console? I actually have access to libusb. I can build a custom version with printf statements and link libedgetpu.dylib against my modified version. I tried intercepting the symbols directly (dlsym(RTLD_NEXT, &#34;libusb_control_transfer&#34;))) but it was not so easy to run because I am using the Python bindings instead of the C&#43;&#43; interface. I have access to the libedgetpu source code so I can see what libusb methods are being used: libusb_control_transfer(), libusb_bulk_transfer(), and libusb_interrupt_transfer(). Also libusb_submit_transfer. Analyzing USB Data No bulk transfers seen when running the example code. Poke libusb_submit_transfer() which triggers an async USB transfer. Each Control Transfer triggers a Submit Transfer (I see both entry methods called in the console prints). It seems that sync. Control Transfers are implemented as type=0 Submit Transfers, type which corresponds to Control Transfers. I suspect that the synchronicity is achieved through a blocking call. Analyzing the Structure of the Transfer of Some Data The first time the Coral is connected, it shows like a generic device. Only after running some code on it, it shows as Coral on USB. Analyzing the intercepted USB data upon a call to edgetpu.load_edgetpu_delegate(), one can see how apex_latest_single_ep.bin is sent to the device through Control Transfers. Afterwards, some further transfers take place. Some of the transfers are Submit Transfers through interface 0x81, meaning that the Host is sending data back to the Device. Comparing the interface load sent data with the data sent when running inference, the structure shows 3 clearly distinct parts: device initialization, image and model transfer and output readout, and device shutdown. The shutdown sequence is the same for load firmware and inference run; the setup sequence is not. Single inference on Vireo and Macaw only show differences in the data related to the tensor being transferred. They show the same initialization and shutdown patterns, as well as mode weight transfer. </p>
-  </div>
-  <footer class="entry-footer"></footer>
-  <a class="entry-link" aria-label="post link to " href="http://localhost:1313/posts/notes-while-hacking-the-coral/"></a>
 </article>
     </main>
     
