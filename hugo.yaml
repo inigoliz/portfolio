@@ -4,6 +4,11 @@ title: Iñigo's Portfolio
 theme: ["PaperMod"]
 
 params:
+  ShowBreadCrumbs: true
+  ShowCodeCopyButtons: true 
+  ShowShareButtons: true
+  cover:
+    linkFullImages: false
   profileMode:
       enabled: true
       title: "¡Hola! - I'm Iñigo"
@@ -20,14 +25,6 @@ params:
         - name: Portfolio
           url: "/posts/"
 
-  # homeInfoParams:
-  #   Title: ¡Hola! - I'm Iñigo
-  #   Content: 👋 Welcome to my portfolio. I am a physicist and a maker. I enjoy hacking, coding and creating.\              
-              
-  #             I'm currently engaged in the [Winter of Output](./posts/winter-of-output).\
-
-  #             It was inspired by Andy Kong's [Year of Output](https://andykong.org/projects/yearofoutput/).
-
   socialIcons:
     - name: github
       title: View my GitHub
@@ -40,4 +37,4 @@ params:
       url: https://www.linkedin.com/in/inigo-lara-psi/
     - name: kofi
       title: Buy me a coffee!
-      url: https://ko-fi.com/inigolara  
+      url: https://ko-fi.com/inigolara
