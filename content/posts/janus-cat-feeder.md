@@ -3,6 +3,11 @@ date: '2024-11-27T12:36:05+01:00'
 draft: false
 title: 'Automatic Cat Feeder'
 slug: janus-cat-feeder
+cover:
+  image: "/images/janus-cat-feeder/IMG_9995.gif"
+  alt: "<alt text>"
+  caption: "<text>"
+  relative: false # To use relative path for cover image, used in hugo Page-bundles
 ---
 ![(Janus header art)](/images/janus-cat-feeder/janus_header.png#center "500px")
 
