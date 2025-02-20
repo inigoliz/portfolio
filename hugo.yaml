@@ -6,7 +6,6 @@ theme: ["PaperMod"]
 params:
   ShowBreadCrumbs: true
   ShowCodeCopyButtons: true 
-  ShowShareButtons: true
   cover:
     linkFullImages: false
   profileMode:

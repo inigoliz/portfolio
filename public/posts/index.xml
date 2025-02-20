@@ -18,7 +18,6 @@
     
      style=&#34;width: 100%; max-width: 700px;&#34;
     /&gt;&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;What happens when you reduce a ML framework all the way to its bare bones? - You get &lt;a href=&#34;https://github.com/tinygrad/teenygrad&#34;&gt;&lt;strong&gt;teenygrad&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;In this post, I want to dive into the source code of teenygrad to illustrate the software architecture behind some important concepts of ML-engines like backpropagation and computational graphs.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s true that you can go read the code directly (it&amp;rsquo;s not that difficult) but&amp;hellip; why not take a guided tour first? If you enjoyed Karpathy&amp;rsquo;s &lt;a href=&#34;https://www.youtube.com/watch?v=VMj-3S1tku0&#34;&gt;micrograd&lt;/a&gt;, you&amp;rsquo;ll like teenygrad.&lt;/p&gt;</description>
