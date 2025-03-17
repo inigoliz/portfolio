@@ -2,26 +2,29 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/</loc>
+    <loc>https://inigoliz.dev/</loc>
+    <lastmod>2025-03-12T23:26:01+01:00</lastmod>
+  </url><url>
+    <loc>https://inigoliz.dev/posts/object-detection-fpv-drone/</loc>
+    <lastmod>2025-03-12T23:26:01+01:00</lastmod>
+  </url><url>
+    <loc>https://inigoliz.dev/posts/</loc>
+    <lastmod>2025-03-12T23:26:01+01:00</lastmod>
+  </url><url>
+    <loc>https://inigoliz.dev/posts/teenygrad-learning-notes/</loc>
     <lastmod>2024-12-26T03:51:29+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2024-12-26T03:51:29+01:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/teenygrad-learning-notes/</loc>
-    <lastmod>2024-12-26T03:51:29+01:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/amanuensis-eeprom-interface/</loc>
+    <loc>https://inigoliz.dev/posts/amanuensis-eeprom-interface/</loc>
     <lastmod>2024-12-10T14:27:41+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/janus-cat-feeder/</loc>
+    <loc>https://inigoliz.dev/posts/janus-cat-feeder/</loc>
     <lastmod>2024-11-27T12:36:05+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/winter-of-output/</loc>
+    <loc>https://inigoliz.dev/posts/winter-of-output/</loc>
     <lastmod>2024-11-18T19:07:28+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
+    <loc>https://inigoliz.dev/categories/</loc>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>https://inigoliz.dev/tags/</loc>
   </url>
 </urlset>

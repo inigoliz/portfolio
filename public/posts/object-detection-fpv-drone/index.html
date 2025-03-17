@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Object Detection on FPV Drone | Iñigo&#39;s Portfolio</title>
+<meta name="keywords" content="">
+<meta name="description" content="Introduction
+This project started with a simple question:
+
+How difficult would it be to get machine learning running locally on my FPV drone?
+
+
+After several iterations, I managed to run object detection on the video feed captured by my drone with a latency high enough not to introduce lag in the flying experience.
+At this point I must take a pause. I know what you&rsquo;re wondering: are you building smart killer drones? Definitely not! The models that I&rsquo;m using or I could use with my hardware are too simple and faulty to be of any practical use! These weapons exist, but still remain far away from what you can build at your home.">
+<meta name="author" content="">
+<link rel="canonical" href="https://inigoliz.dev/posts/object-detection-fpv-drone/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d6fcd20a4fb86efa4dfac8ec95da60244cc8871042183da1ef28e3a762ad79c8.css" integrity="sha256-1vzSCk&#43;4bvpN&#43;sjsldpgJEzIhxBCGD2h7yjjp2Ktecg=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://inigoliz.dev/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://inigoliz.dev/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://inigoliz.dev/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://inigoliz.dev/apple-touch-icon.png">
+<link rel="mask-icon" href="https://inigoliz.dev/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://inigoliz.dev/posts/object-detection-fpv-drone/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:url" content="https://inigoliz.dev/posts/object-detection-fpv-drone/">
+  <meta property="og:site_name" content="Iñigo&#39;s Portfolio">
+  <meta property="og:title" content="Object Detection on FPV Drone">
+  <meta property="og:description" content="Introduction This project started with a simple question:
+How difficult would it be to get machine learning running locally on my FPV drone?
+After several iterations, I managed to run object detection on the video feed captured by my drone with a latency high enough not to introduce lag in the flying experience.
+At this point I must take a pause. I know what you’re wondering: are you building smart killer drones? Definitely not! The models that I’m using or I could use with my hardware are too simple and faulty to be of any practical use! These weapons exist, but still remain far away from what you can build at your home.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-03-12T23:26:01+01:00">
+    <meta property="article:modified_time" content="2025-03-12T23:26:01+01:00">
+    <meta property="og:image" content="https://inigoliz.dev/images/object-detection-fpv-drone/cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://inigoliz.dev/images/object-detection-fpv-drone/cover.png">
+<meta name="twitter:title" content="Object Detection on FPV Drone">
+<meta name="twitter:description" content="Introduction
+This project started with a simple question:
+
+How difficult would it be to get machine learning running locally on my FPV drone?
+
+
+After several iterations, I managed to run object detection on the video feed captured by my drone with a latency high enough not to introduce lag in the flying experience.
+At this point I must take a pause. I know what you&rsquo;re wondering: are you building smart killer drones? Definitely not! The models that I&rsquo;m using or I could use with my hardware are too simple and faulty to be of any practical use! These weapons exist, but still remain far away from what you can build at your home.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://inigoliz.dev/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Object Detection on FPV Drone",
+      "item": "https://inigoliz.dev/posts/object-detection-fpv-drone/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Object Detection on FPV Drone",
+  "name": "Object Detection on FPV Drone",
+  "description": "Introduction This project started with a simple question:\nHow difficult would it be to get machine learning running locally on my FPV drone?\nAfter several iterations, I managed to run object detection on the video feed captured by my drone with a latency high enough not to introduce lag in the flying experience.\nAt this point I must take a pause. I know what you\u0026rsquo;re wondering: are you building smart killer drones? Definitely not! The models that I\u0026rsquo;m using or I could use with my hardware are too simple and faulty to be of any practical use! These weapons exist, but still remain far away from what you can build at your home.\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "Introduction This project started with a simple question:\nHow difficult would it be to get machine learning running locally on my FPV drone?\nAfter several iterations, I managed to run object detection on the video feed captured by my drone with a latency high enough not to introduce lag in the flying experience.\nAt this point I must take a pause. I know what you’re wondering: are you building smart killer drones? Definitely not! The models that I’m using or I could use with my hardware are too simple and faulty to be of any practical use! These weapons exist, but still remain far away from what you can build at your home.\nNote: The technical reason why I cannot run advanced ML models with my setup is that the hardware accelerator that I’m using only fits ML models with a maximum size of 8 MB. That’s a pretty serious limitation for how good of a model you can use!\nThe motivation behind this project is not weapons but another: I wanted to get ML running live on a video feed so that I could show the result on my FPV goggles. For example, magine running a DeepDream kind of effect live on a camera stream. How cool would that be? I didn’t get that far, but this project enables the technology for it.\n# Altered perception with DeepDream and FPV goggles (idea) Live video -\u003e DeepDream ML model -\u003e FPV goggles Here is a recording of what I see on my FPV goggles (sorry for the low quality):\nInterested? Let me show you how I built it!\nHardware List These are the pieces of hardware that I used in the project:\nIn the image above you can see:\nRaspberry Pi 5 (other models will work as well) Raspberry Pi Camera Module Coral Tensor Processing Unit (TPU) USB accelerator Analog FPV Goggles FPV drone On a high-level, this is what happens:\nThe RaspberryPi camera gets the video feed The Coral TPU gets the object detection done The RaspberryPi outputs via analog video the video feed + object detection The drone’s Video Transmitter (VTX) sends the video to the FPV goggles Analog FPV drones transmits video at 30 FPS. The image processing must happe at that latency (at least) to avoid lagginess.\nThe device handling the heavy ML is a Coral Tensor Processing Unit (TPU). It’s an ML accelerator: a small USB device that can run ML models with high latency. For example, it can run object detection with a latency of ~17 ms. That means that it runs at ~60 FPS, which is more than enough for a stream of video.\nConnecting the RaspberryPi to the drone I needed a way to intercept the video frames, run ML on them and then have the output sent to the FPV goggles:\nVideo pipeline overview: FPV video stream -\u003e Processing on Coral TPU -\u003e VTX -\u003e FPV goggles First I tried getting access to video feed of the drone via the drone firmware but then I realized that the drone’s MCU does not have USB, hence I would not be able to connect the Coral TPU to it. I was happy about this because hacking the drone’s firmware was no easy task.\nI needed another approach. Less refined. More hacky. And then… I found it:\nWhat if I connected the RaspberryPi to the drone’s VTX directly?\nAfter a quick Google, I found that the RaspberryPi can output analog video. I knew that my VTX worked with analog video! I soldered some wires, connected everything… and voilà:\nSimple as that, I had the Raspberry Pi desktop showing on my FPV Goggles!\nI soldered wires to the RaspberryPi to get access to the analog video output and enabled it in software following the official documentation.\nNote: In the second picture, if you look closely you’ll see a purple cable soldered. It comes from the drone’s FPV camera. For some reason that I don’t understand, I had to keep it soldered to be able to inject the analog video from the Raspberry Pi into the drone analog video input.\nCoding on the FPV goggles felt like having a very cheap version of Apple Vision 😂:\nSoftware The software that I used on this project is available on my Github here: inigoliz/rpi-meets-tpu.\nI don’t wan’t to go much into details, but what it does is running a pretrained object detection model in the Coral TPU. Coral provides several trained models. The model I’m using is:\nssd_mobilenet_v2_coco_quant_postprocess_edgetpu.tflite It is ~6.9 MB and it can detect 90 COCO objects (some of them are human, fire hydrant and donut - I guess this is what you get with American-centric AI…)\nThe distinctive feature of my software implementation of object detection in the Coral TPU is that, unlike the examples provided by Google, I don’t need to install any TPU-specifi libraries to use the TPU. This has the advantage that I can use the TPU with devices that originally were not supported.\nThe Raspberry Pi Zero W was released in 2016, 3 years before the Coral TPU. Despite it not being oficially supported, I can use it since my implementation does not use the official libraries.\nClosing remarks Just another video…\n",
+  "wordCount" : "871",
+  "inLanguage": "en",
+  "image":"https://inigoliz.dev/images/object-detection-fpv-drone/cover.png","datePublished": "2025-03-12T23:26:01+01:00",
+  "dateModified": "2025-03-12T23:26:01+01:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://inigoliz.dev/posts/object-detection-fpv-drone/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Iñigo's Portfolio",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://inigoliz.dev/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://inigoliz.dev/" accesskey="h" title="Iñigo&#39;s Portfolio (Alt + H)">Iñigo&#39;s Portfolio</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Object Detection on FPV Drone
+    </h1>
+    <div class="post-meta"><span title='2025-03-12 23:26:01 +0100 CET'>March 12, 2025</span>
+
+</div>
+  </header>
+  <div class="post-content"><h2 id="introduction">Introduction<a hidden class="anchor" aria-hidden="true" href="#introduction">#</a></h2>
+<p>This project started with a simple question:</p>
+<blockquote>
+<p>How difficult would it be to get machine learning running locally on my FPV drone?</p>
+</blockquote>
+<p><img
+    src="/images/object-detection-fpv-drone/drone_table.gif#center" alt="(Gif showing EEPROM reading)"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<p>After several iterations, I managed to run object detection on the video feed captured by my drone with a latency high enough not to introduce lag in the flying experience.</p>
+<p>At this point I must take a pause. I know what you&rsquo;re wondering: are you building <em>smart killer drones</em>? Definitely not! The models that I&rsquo;m using or I could use with my hardware are <strong>too simple and faulty</strong> to be of any practical use! These weapons exist, but still remain far away from what you can build at your home.</p>
+<p><img
+    src="/images/object-detection-fpv-drone/coco_dog.png#center" alt="(Misclassification from the ML model)"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<blockquote>
+<p><strong>Note:</strong> The technical reason why I cannot run advanced ML models with my setup is that the hardware accelerator that I&rsquo;m using only fits ML models with a maximum size of 8 MB. That&rsquo;s a pretty serious limitation for how good of a model you can use!</p>
+</blockquote>
+<p>The motivation behind this project is not weapons but another: I wanted to get ML running live on a video feed so that I could show the result on my FPV goggles. For example, magine running a <strong>DeepDream</strong> kind of effect live on a camera stream. How cool would that be? I didn&rsquo;t get that far, but this project enables the technology for it.</p>
+<pre tabindex="0"><code># Altered perception with DeepDream and FPV goggles (idea)
+
+Live video -&gt; DeepDream ML model -&gt; FPV goggles
+</code></pre><p><img
+    src="/images/object-detection-fpv-drone/deepdream.jpg#center" alt="(DeepDream example)"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<p>Here is a recording of what I see on my FPV goggles (sorry for the low quality):</p>
+<p><img
+    src="/images/object-detection-fpv-drone/inside_goggles.gif#center" alt="(Object detection as seen in FPV)"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<p>Interested? Let me show you how I built it!</p>
+<h2 id="hardware-list">Hardware List<a hidden class="anchor" aria-hidden="true" href="#hardware-list">#</a></h2>
+<p>These are the pieces of hardware that I used in the project:</p>
+<p><img
+    src="/images/object-detection-fpv-drone/hardware.jpeg#center" alt="(All the hardware I used in this project)"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<p>In the image above you can see:</p>
+<ul>
+<li>Raspberry Pi 5 (other models will work as well)</li>
+<li>Raspberry Pi Camera Module</li>
+<li>Coral Tensor Processing Unit (TPU) USB accelerator</li>
+<li>Analog FPV Goggles</li>
+<li>FPV drone</li>
+</ul>
+<p>On a high-level, this is what happens:</p>
+<ol>
+<li>The RaspberryPi camera gets the video feed</li>
+<li>The Coral TPU gets the object detection done</li>
+<li>The RaspberryPi outputs via analog video the video feed + object detection</li>
+<li>The drone&rsquo;s Video Transmitter (VTX) sends the video to the FPV goggles</li>
+</ol>
+<p>Analog FPV drones transmits video at 30 FPS. The image processing must happe at that latency (at least) to avoid lagginess.</p>
+<p>The device handling the heavy ML is a Coral Tensor Processing Unit (TPU). It&rsquo;s an ML accelerator: a small USB device that can run ML models with high latency. For example, it can run object detection with a latency of ~17 ms. That means that it runs at ~60 FPS, which is more than enough for a stream of video.</p>
+<p><img
+    src="/images/object-detection-fpv-drone/coral.jpeg#center" alt="(Closeup of a Coral TPU)"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<h2 id="connecting-the-raspberrypi-to-the-drone">Connecting the RaspberryPi to the drone<a hidden class="anchor" aria-hidden="true" href="#connecting-the-raspberrypi-to-the-drone">#</a></h2>
+<p>I needed a way to intercept the video frames, run ML on them and then have the output sent to the FPV goggles:</p>
+<pre tabindex="0"><code>Video pipeline overview:
+FPV video stream -&gt; Processing on Coral TPU -&gt; VTX -&gt; FPV goggles
+</code></pre><p>First I tried getting access to video feed of the drone via the drone firmware but then I realized that the drone&rsquo;s MCU does not have USB, hence I would not be able to connect the Coral TPU to it. I was happy about this because hacking the drone&rsquo;s firmware was no easy task.</p>
+<p>I needed another approach. Less refined. More hacky. And then&hellip; I found it:</p>
+<blockquote>
+<p>What if I connected the RaspberryPi to the drone&rsquo;s VTX directly?</p>
+</blockquote>
+<p>After a quick Google, I found that the RaspberryPi can output analog video. I knew that my VTX worked with analog video! I soldered some wires, connected everything&hellip; and <em>voilà</em>:</p>
+<p>Simple as that, I had the Raspberry Pi desktop showing on my FPV Goggles!</p>
+<p><img
+    src="/images/object-detection-fpv-drone/apple_vision.gif#center" alt="(Raspberry Pi Desktop in FPV goggles)"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<p>I soldered wires to the RaspberryPi to get access to the analog video output and enabled it in software following the official documentation.</p>
+<p><img
+    src="/images/object-detection-fpv-drone/rpi-video.png#center" alt="(Analog video hardware connections)"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<blockquote>
+<p><strong>Note:</strong>
+In the second picture, if you look closely you&rsquo;ll see a purple cable soldered. It comes from the drone&rsquo;s <em>FPV camera</em>. For some reason that I don&rsquo;t understand, I had to keep it soldered to be able to inject the analog video from the Raspberry Pi into the drone analog video input.</p>
+</blockquote>
+<p>Coding on the FPV goggles felt like having a very cheap version of Apple Vision 😂:</p>
+<p><img
+    src="/images/object-detection-fpv-drone/coding-fpv.gif#center" alt="(Raspberry Pi Desktop in FPV goggles)"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<h2 id="software">Software<a hidden class="anchor" aria-hidden="true" href="#software">#</a></h2>
+<p>The software that I used on this project is available on my Github here: <a href="https://github.com/inigoliz/rpi-meets-tpu/">inigoliz/rpi-meets-tpu</a>.</p>
+<p>I don&rsquo;t wan&rsquo;t to go much into details, but what it does is running a pretrained object detection model in the Coral TPU. Coral provides several trained models. The model I&rsquo;m using is:</p>
+<pre tabindex="0"><code>ssd_mobilenet_v2_coco_quant_postprocess_edgetpu.tflite
+</code></pre><p>It is ~6.9 MB and it can detect 90 COCO objects (some of them are <code>human</code>, <code>fire hydrant</code> and <code>donut</code> - I guess this is what you get with American-centric AI&hellip;)</p>
+<p>The distinctive feature of my software implementation of object detection in the Coral TPU is that, unlike the examples provided by Google, I <strong>don&rsquo;t need to install any TPU-specifi libraries</strong> to use the TPU. This has the advantage that I can use the TPU with devices that originally were not supported.</p>
+<blockquote>
+<p>The Raspberry Pi Zero W was released in 2016, 3 years before the Coral TPU. Despite it not being oficially supported, I can use it since my implementation does not use the official libraries.</p>
+</blockquote>
+<p><img
+    src="/images/object-detection-fpv-drone/rpi-zero.jpeg#center" alt="(Raspberry Pi Zero running object detection)"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<p><img
+    src="/images/object-detection-fpv-drone/requirements.png#center" alt="(Raspberry Pi Zero running object detection)"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+<h2 id="closing-remarks">Closing remarks<a hidden class="anchor" aria-hidden="true" href="#closing-remarks">#</a></h2>
+<p>Just another video&hellip;</p>
+<p><img
+    src="/images/object-detection-fpv-drone/elephants.gif#center" alt="(Object detection on elephants)"
+    
+     style="width: 100%; max-width: 700px;"
+    /></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="https://inigoliz.dev/">Iñigo&#39;s Portfolio</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

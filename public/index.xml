@@ -2,19 +2,37 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Iñigo&#39;s Portfolio</title>
-    <link>http://localhost:1313/</link>
+    <link>https://inigoliz.dev/</link>
     <description>Recent content on Iñigo&#39;s Portfolio</description>
     <generator>Hugo -- 0.140.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 26 Dec 2024 03:51:29 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 12 Mar 2025 23:26:01 +0100</lastBuildDate>
+    <atom:link href="https://inigoliz.dev/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Object Detection on FPV Drone</title>
+      <link>https://inigoliz.dev/posts/object-detection-fpv-drone/</link>
+      <pubDate>Wed, 12 Mar 2025 23:26:01 +0100</pubDate>
+      <guid>https://inigoliz.dev/posts/object-detection-fpv-drone/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;This project started with a simple question:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;How difficult would it be to get machine learning running locally on my FPV drone?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img
+    src=&#34;https://inigoliz.dev/images/object-detection-fpv-drone/drone_table.gif#center&#34; alt=&#34;(Gif showing EEPROM reading)&#34;
+    
+     style=&#34;width: 100%; max-width: 700px;&#34;
+    /&gt;&lt;/p&gt;
+&lt;p&gt;After several iterations, I managed to run object detection on the video feed captured by my drone with a latency high enough not to introduce lag in the flying experience.&lt;/p&gt;
+&lt;p&gt;At this point I must take a pause. I know what you&amp;rsquo;re wondering: are you building &lt;em&gt;smart killer drones&lt;/em&gt;? Definitely not! The models that I&amp;rsquo;m using or I could use with my hardware are &lt;strong&gt;too simple and faulty&lt;/strong&gt; to be of any practical use! These weapons exist, but still remain far away from what you can build at your home.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Teenygrad Study Notes</title>
-      <link>http://localhost:1313/posts/teenygrad-learning-notes/</link>
+      <link>https://inigoliz.dev/posts/teenygrad-learning-notes/</link>
       <pubDate>Thu, 26 Dec 2024 03:51:29 +0100</pubDate>
-      <guid>http://localhost:1313/posts/teenygrad-learning-notes/</guid>
+      <guid>https://inigoliz.dev/posts/teenygrad-learning-notes/</guid>
       <description>&lt;p&gt;&lt;img
-    src=&#34;http://localhost:1313/images/teenygrad-learning-notes/cover.png&#34; alt=&#34;(Cover image)&#34;
+    src=&#34;https://inigoliz.dev/images/teenygrad-learning-notes/cover.png&#34; alt=&#34;(Cover image)&#34;
     
      style=&#34;width: 100%; max-width: 700px;&#34;
     /&gt;&lt;/p&gt;
@@ -24,11 +42,11 @@
     </item>
     <item>
       <title>Minimalistic EEPROM programmer</title>
-      <link>http://localhost:1313/posts/amanuensis-eeprom-interface/</link>
+      <link>https://inigoliz.dev/posts/amanuensis-eeprom-interface/</link>
       <pubDate>Tue, 10 Dec 2024 14:27:41 +0100</pubDate>
-      <guid>http://localhost:1313/posts/amanuensis-eeprom-interface/</guid>
+      <guid>https://inigoliz.dev/posts/amanuensis-eeprom-interface/</guid>
       <description>&lt;p&gt;&lt;img
-    src=&#34;http://localhost:1313/images/amanuensis-eeprom-interface/amanuensis_header.png#center&#34; alt=&#34;(Amanuensis Header Art)&#34;
+    src=&#34;https://inigoliz.dev/images/amanuensis-eeprom-interface/amanuensis_header.png#center&#34; alt=&#34;(Amanuensis Header Art)&#34;
     
      style=&#34;width: 100%; max-width: 700px;&#34;
     /&gt;&lt;/p&gt;
@@ -38,7 +56,7 @@
 &lt;a href=&#34;https://www.youtube.com/watch?v=LnzuMJLZRdU&amp;amp;list=PLowKtXNTBypFbtuVMUVXNR0z1mu7dp7eH&amp;amp;index=1&#34;&gt;Ben Eater&amp;rsquo;s 6502 pc&lt;/a&gt;.
 Allows reading contents from the EEPROM and writing data to it.&lt;/p&gt;
 &lt;p&gt;&lt;img
-    src=&#34;http://localhost:1313/images/amanuensis-eeprom-interface/read_range_presentation.png#center&#34; alt=&#34;(Reading EEPROM preview)&#34;
+    src=&#34;https://inigoliz.dev/images/amanuensis-eeprom-interface/read_range_presentation.png#center&#34; alt=&#34;(Reading EEPROM preview)&#34;
     
      style=&#34;width: 100%; max-width: 700px;&#34;
     /&gt;&lt;/p&gt;
@@ -49,18 +67,18 @@ Allows reading contents from the EEPROM and writing data to it.&lt;/p&gt;
     </item>
     <item>
       <title>Automatic Cat Feeder</title>
-      <link>http://localhost:1313/posts/janus-cat-feeder/</link>
+      <link>https://inigoliz.dev/posts/janus-cat-feeder/</link>
       <pubDate>Wed, 27 Nov 2024 12:36:05 +0100</pubDate>
-      <guid>http://localhost:1313/posts/janus-cat-feeder/</guid>
+      <guid>https://inigoliz.dev/posts/janus-cat-feeder/</guid>
       <description>&lt;p&gt;&lt;img
-    src=&#34;http://localhost:1313/images/janus-cat-feeder/janus_header.png#center&#34; alt=&#34;(Janus header art)&#34;
+    src=&#34;https://inigoliz.dev/images/janus-cat-feeder/janus_header.png#center&#34; alt=&#34;(Janus header art)&#34;
     
      style=&#34;width: 100%; max-width: 500px;&#34;
     /&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;what-is-it&#34;&gt;What is it?&lt;/h2&gt;
 &lt;p&gt;&lt;img
-    src=&#34;http://localhost:1313/images/janus-cat-feeder/IMG_9965_2.gif#center&#34; alt=&#34;(Lilo getting her food)&#34;
+    src=&#34;https://inigoliz.dev/images/janus-cat-feeder/IMG_9965_2.gif#center&#34; alt=&#34;(Lilo getting her food)&#34;
     
      style=&#34;width: 100%; max-width: 350px;&#34;
     /&gt;
@@ -69,7 +87,7 @@ A camera-controlled cat feeder that only exposes the food when a certain pet is 
 &lt;h2 id=&#34;motivation&#34;&gt;Motivation&lt;/h2&gt;
 &lt;p&gt;I have two cats: one is black and slim and the other is white and chubby. The black one is called Lilo. The white one, Coco.&lt;/p&gt;
 &lt;p&gt;&lt;img
-    src=&#34;http://localhost:1313/images/janus-cat-feeder/IMG_9967.jpg#center&#34; alt=&#34;(Lilo and Coco)&#34;
+    src=&#34;https://inigoliz.dev/images/janus-cat-feeder/IMG_9967.jpg#center&#34; alt=&#34;(Lilo and Coco)&#34;
     
      style=&#34;width: 100%; max-width: 350px;&#34;
     /&gt;&lt;/p&gt;
@@ -77,11 +95,11 @@ A camera-controlled cat feeder that only exposes the food when a certain pet is 
     </item>
     <item>
       <title>Winter of Output</title>
-      <link>http://localhost:1313/posts/winter-of-output/</link>
+      <link>https://inigoliz.dev/posts/winter-of-output/</link>
       <pubDate>Mon, 18 Nov 2024 19:07:28 +0100</pubDate>
-      <guid>http://localhost:1313/posts/winter-of-output/</guid>
+      <guid>https://inigoliz.dev/posts/winter-of-output/</guid>
       <description>&lt;p&gt;&lt;img
-    src=&#34;http://localhost:1313/images/DSCF1490.jpg#center&#34; alt=&#34;(Scandinavian winter landscape)&#34;
+    src=&#34;https://inigoliz.dev/images/DSCF1490.jpg#center&#34; alt=&#34;(Scandinavian winter landscape)&#34;
     
     
     /&gt;&lt;/p&gt;
