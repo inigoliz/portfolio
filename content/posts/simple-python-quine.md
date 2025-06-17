@@ -32,7 +32,7 @@ print('a = %r\nprint(%r %% (a, a))' % (a, a))
 
 This is what comes to the terminal when I run that code:
 
-```bash
+```python
 $ python quine.py
 a = 'a = %r\nprint(%r %% (a, a))'
 print('a = %r\nprint(%r %% (a, a))' % (a, a))
@@ -53,7 +53,7 @@ print('%r' % a)
 
 which prints:
 
-```bash
+```python
 $ 'hola'
 ```
 
@@ -66,7 +66,7 @@ a = 'hola'
 print('a = %r' % a)
 ```
 
-```bash
+```python
 $ a = 'hola'
 ```
 
@@ -77,7 +77,7 @@ a = 'hola'
 print('a = %r\nprint()' % a)
 ```
 
-```bash
+```python
 $ a = 'hola'
   print()
 ```
@@ -91,7 +91,7 @@ a = 'a = %r\nprint(%r)'
 print('a = %r\nprint(%r)' % (a, a))
 ```
 
-```bash
+```python
 a = 'a = %r\nprint(%r)'
 print('a = %r\nprint(%r)')
 ```
@@ -110,7 +110,7 @@ a = 'a = %r\nprint(%r) % (a, a)'
 print('a = %r\nprint(%r)' % (a, a))
 ```
 
-```bash
+```python
 $ a = 'a = %r\nprint(%r) % (a, a)'
   print('a = %r\nprint(%r) % (a, a)')
   #                                ^ misplaced quote
@@ -130,17 +130,17 @@ Some people address this challenge with a nifty trick: printing the quotes using
 print(chr(39) + chr(104) + chr(111) + chr(108) + chr(97) + chr(39))
 ```
 
-```bash
+```python
 'hola'
 ```
 
-However, I'd not like to depend on ASCII for my quine to work.
+However, I don't like to depend on ASCII for my quine to work.
 
 Instead, I'll use a different technique. Actually, I've been using it since the beginning of this post: remember when I said I would use *string formatting* as my core *syntactic trick*? Well, this is why: it allows me to print quotes without having to write the quotes explicitly in the print.
 
 How can we print the following *string*?
 
-```bash
+```python
 $ print('hola')
 ```
 
@@ -151,7 +151,7 @@ a = 'hola'
 print('print(%r)' % (a))
 ```
 
-```bash
+```python
 $ print('hola')
 ```
 
@@ -169,7 +169,7 @@ print('a = %r\nprint(%r)' % (a, a))
 
 Which printed, erroneously:
 
-```bash
+```python
 $ a = 'a = %r\nprint(%r) % (a, a)'
   print('a = %r\nprint(%r) % (a, a)')
   #                                ^ misplaced quote
@@ -182,7 +182,7 @@ a = 'a = %r\nprint(%r)'
 print('a = %r\nprint(%r %% (a, a))' % (a, a))
 ```
 
-```bash
+```python
 $ a = 'a = %r\nprint(%r)'
   print('a = %r\nprint(%r)' % (a, a))
 #                     ^ I must place %% (a, a) after here
@@ -197,7 +197,7 @@ print('a = %r\nprint(%r %% (a, a))' % (a, a))
 
 And there it is. The **quine**:
 
-```bash
+```python
 $ a = 'a = %r\nprint(%r %% (a, a))'
   print('a = %r\nprint(%r) %% (a, a)' % (a, a))
 ```
