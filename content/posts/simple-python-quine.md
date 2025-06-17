@@ -9,10 +9,9 @@ cover:
   relative: false
 ---
 
-![(Escher self reference)](/images/escher.png#center)
+![(Escher self reference)](/images/simple-python-quine/escher.png "700px")
 
-
-# A simple Python quine, step-by-step
+## Self-replicating programs
 
 Let's talk about self-replicating programs: A self-printing program, or *quine*, is a program that, when executed, prints it's own source code.
 
@@ -39,7 +38,7 @@ a = 'a = %r\nprint(%r %% (a, a))'
 print('a = %r\nprint(%r %% (a, a))' % (a, a))
 ```
 
-I can run it forever, in an endless loop or execution.
+I can run it forever, in an endless loop of execution.
 
 ## Exploiting the syntax
 
@@ -158,7 +157,6 @@ $ print('hola')
 
 See where this is going? Using *string formatting* allows to print quotes *wihtout* including the quotes *to be printed* in the print statement.
 
-
 ## Last details
 
 Now, back to the quine. We had:
@@ -204,6 +202,27 @@ $ a = 'a = %r\nprint(%r %% (a, a))'
   print('a = %r\nprint(%r) %% (a, a)' % (a, a))
 ```
 
+## Quines and DNA
+
+Let's think about DNA whit an information processing mindset:
+DNA can be thought as a program such as, upon being run, preforms certain actions and self-replicates.
+
+It's not trivial how a program might do that. It's not even trivial whether that might even be possible. However, I hope that by this point of the blog post it's more or less makes sense that such a program can exist.
+
+In fact, with a rather small modifyication of the Python quine, I can allow the progam to perform actions besides self replicating.
+
+The following Python quine can be thought as an analogy of what DNA does:
+
+```python
+a = 'a = %r\ndo_other_stuff()\nprint(%r %% (a, a))'
+do_other_stuff()
+print('a = %r\ndo_other_stuff()\nprint(%r %% (a, a))' % (a, a))
+```
+
+Upon being run, the code executes `do_other_stuff()` which may have side-effects, and finally it prints itself (or copies itself to a new cell).
+
+(Sorry for my loose precision when writing about biology concepts 😅)
+
 ## Wrapping up
 
 I know, it takes a while to wrap one's head around the syntax acrobatics.
@@ -223,6 +242,6 @@ What happens if we give `DUP` as an argument?
 DUP DUP  --execute-->  DUP DUP  --execute-->  DUP DUP --> ...
 ```
 
-See? We have a loop. A cycle. Or a *fixed point* of the *execution*.
+See? We have a loop. Or a cycle. Or a *fixed point* of the *execution*.
 
-Self-replicating stuff is great: from DNA, to the  movement, there's something deeply fascinating about it.
+Self-replicating stuff is great!
