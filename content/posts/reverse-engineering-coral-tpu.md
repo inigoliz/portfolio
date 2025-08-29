@@ -117,7 +117,7 @@ Thus, when running the image classification now we get the following mysterious 
 
 And zooming out, this is what the whole blob looks like:
 
-![Blob of logged data](images/reverse-engineering-coral-tpu/blob_logged_data.png)
+![Blob of logged data](/images/reverse-engineering-coral-tpu/blob_logged_data.png)
 How can we make sense of it?
 
 ### Making sense of the hex data
