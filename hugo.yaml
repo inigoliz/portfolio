@@ -1,0 +1,40 @@
+baseURL: https://inigoliz.dev
+languageCode: en-us
+title: Iñigo Lara's Portfolio
+theme: ["PaperMod"]
+
+params:
+  author:
+    name: Iñigo Lara
+  ShowCodeCopyButtons: true 
+  cover:
+    linkFullImages: false
+  profileMode:
+      enabled: true
+      title: "¡Hola! - I'm Iñigo"
+      subtitle: "👋 Welcome to my portfolio. \ 
+
+      I am a physicist and a maker. I enjoy hacking, coding and creating. \ 
+
+      I'm currently engaged in the [**Winter of Output**](./posts/winter-of-output)."
+      imageUrl: "/images/me.jpg"
+      imageTitle: "Me"
+      imageWidth: 250
+      imageHeight: 250
+      buttons:
+        - name: Portfolio
+          url: "/posts/"
+
+  socialIcons:
+    - name: github
+      title: View my GitHub
+      url: https://github.com/inigoliz
+    - name: Bluesky
+      title: View my X/Twitter profile
+      url: https://bsky.app/profile/inigoliz.bsky.social
+    - name: linkedin
+      title: View my Linkedin profile
+      url: https://www.linkedin.com/in/inigo-lara-psi/
+    - name: kofi
+      title: Buy me a coffee!
+      url: https://ko-fi.com/inigolara
