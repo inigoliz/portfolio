@@ -40,22 +40,33 @@ jobs:
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
+      - name: Set Hugo root
+        id: hugo-root
+        run: |
+          if [ -f hugo.yaml ] || [ -f hugo.toml ] || [ -f hugo.json ]; then
+            echo "root=." >> $GITHUB_OUTPUT
+          elif [ -f portfolio/hugo.yaml ] || [ -f portfolio/hugo.toml ] || [ -f portfolio/hugo.json ]; then
+            echo "root=portfolio" >> $GITHUB_OUTPUT
+          else
+            echo "Could not find Hugo config (hugo.yaml/toml/json)" && exit 1
+          fi
       - name: Install Node.js dependencies
-        run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+        run: "[[ -f ${{ steps.hugo-root.outputs.root }}/package-lock.json || -f ${{ steps.hugo-root.outputs.root }}/npm-shrinkwrap.json ]] && (cd ${{ steps.hugo-root.outputs.root }} && npm ci) || true"
       - name: Build with Hugo
         env:
           HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache
           HUGO_ENVIRONMENT: production
           TZ: America/Los_Angeles
         run: |
+          cd ${{ steps.hugo-root.outputs.root }}
           hugo \
             --gc \
             --minify \
-            --baseURL "${{ steps.pages.outputs.base_url }}/"          
+            --baseURL "${{ steps.pages.outputs.base_url }}/"
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./public
+          path: ${{ steps.hugo-root.outputs.root }}/public
 
   deploy:
     name: Publish
