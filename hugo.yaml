@@ -24,7 +24,7 @@ params:
       imageHeight: 250
       buttons:
         - name: Portfolio
-          url: "/posts/"
+          url: "/portfolio/posts/"
   caches:
     images:
       dir: :cacheDir/images
