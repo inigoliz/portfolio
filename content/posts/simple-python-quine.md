@@ -4,12 +4,12 @@ draft: false
 title: 'Simple Python quine, step-by-step'
 slug: simple-python-quine
 cover:
-  image: "images/simple-python-quine/escher.png"
+  image: "posts/escher.png"
   alt: "Cover image"
   relative: false
 ---
 
-![(Escher self reference)](images/simple-python-quine/escher.png "700px")
+![(Escher self reference)](escher.png "700px")
 
 ## Self-replicating programs
 

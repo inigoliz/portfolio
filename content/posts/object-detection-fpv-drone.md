@@ -4,7 +4,7 @@ draft: false
 title: 'Object Detection on FPV Drone'
 slug: object-detection-fpv-drone
 cover:
-  image: "images/object-detection-fpv-drone/cover.png"
+  image: "posts/cover.png"
   alt: "Cover image"
   relative: false
 ---
@@ -15,13 +15,13 @@ This project started with a simple question:
 
 > How difficult would it be to get machine learning running locally on my FPV drone?
 
-![(Gif showing EEPROM reading)](images/object-detection-fpv-drone/drone_table.gif#center "700px")
+![(Gif showing EEPROM reading)](drone_table.gif#center "700px")
 
 After several iterations, I managed to run object detection on the video feed captured by my drone with a latency high enough not to introduce lag in the flying experience.
 
 At this point I must take a pause. I know what you're wondering: are you building *smart killer drones*? Definitely not! The models that I'm using or I could use with my hardware are **too simple and faulty** to be of any practical use! These weapons exist, but still remain far away from what you can build at your home.
 
-![(Misclassification from the ML model)](images/object-detection-fpv-drone/coco_dog.png#center "700px")
+![(Misclassification from the ML model)](coco_dog.png#center "700px")
 
 > **Note:** The technical reason why I cannot run advanced ML models with my setup is that the hardware accelerator that I'm using only fits ML models with a maximum size of 8 MB. That's a pretty serious limitation for how good of a model you can use!
 
@@ -33,11 +33,11 @@ The motivation behind this project is not weapons but another: I wanted to get M
 Live video -> DeepDream ML model -> FPV goggles
 ```
 
-![(DeepDream example)](images/object-detection-fpv-drone/deepdream.jpg#center "700px")
+![(DeepDream example)](deepdream.jpg#center "700px")
 
 Here is a recording of what I see on my FPV goggles (sorry for the low quality):
 
-![(Object detection as seen in FPV)](images/object-detection-fpv-drone/inside_goggles.gif#center "700px")
+![(Object detection as seen in FPV)](inside_goggles.gif#center "700px")
 
 Interested? Let me show you how I built it!
 
@@ -45,7 +45,7 @@ Interested? Let me show you how I built it!
 
 These are the pieces of hardware that I used in the project:
 
-![(All the hardware I used in this project)](images/object-detection-fpv-drone/hardware.jpeg#center "700px")
+![(All the hardware I used in this project)](hardware.jpeg#center "700px")
 
 In the image above you can see:
 - Raspberry Pi 5 (other models will work as well)
@@ -64,7 +64,7 @@ Analog FPV drones transmits video at 30 FPS. The image processing must happe at 
 
 The device handling the heavy ML is a Coral Tensor Processing Unit (TPU). It's an ML accelerator: a small USB device that can run ML models with high latency. For example, it can run object detection with a latency of ~17 ms. That means that it runs at ~60 FPS, which is more than enough for a stream of video.
 
-![(Closeup of a Coral TPU)](images/object-detection-fpv-drone/coral.jpeg#center "700px")
+![(Closeup of a Coral TPU)](coral.jpeg#center "700px")
 
 ## Connecting the RaspberryPi to the drone
 
@@ -85,18 +85,18 @@ After a quick Google, I found that the RaspberryPi can output analog video. I kn
 
 Simple as that, I had the Raspberry Pi desktop showing on my FPV Goggles!
 
-![(Raspberry Pi Desktop in FPV goggles)](images/object-detection-fpv-drone/apple_vision.gif#center "700px")
+![(Raspberry Pi Desktop in FPV goggles)](apple_vision.gif#center "700px")
 
 I soldered wires to the RaspberryPi to get access to the analog video output and enabled it in software following the official documentation.
 
-![(Analog video hardware connections)](images/object-detection-fpv-drone/rpi-video.png#center "700px")
+![(Analog video hardware connections)](rpi-video.png#center "700px")
 
 > **Note:**
 > In the second picture, if you look closely you'll see a purple cable soldered. It comes from the drone's *FPV camera*. For some reason that I don't understand, I had to keep it soldered to be able to inject the analog video from the Raspberry Pi into the drone analog video input.
 
 Coding on the FPV goggles felt like having a very cheap version of Apple Vision 😂:
 
-![(Raspberry Pi Desktop in FPV goggles)](images/object-detection-fpv-drone/coding-fpv.gif#center "700px")
+![(Raspberry Pi Desktop in FPV goggles)](coding-fpv.gif#center "700px")
 
 ## Software
 
@@ -114,16 +114,16 @@ The distinctive feature of my software implementation of object detection in the
 
 > The Raspberry Pi Zero W was released in 2016, 3 years before the Coral TPU. Despite it not being oficially supported, I can use it since my implementation does not use the official libraries.
 
-![(Raspberry Pi Zero running object detection)](images/object-detection-fpv-drone/rpi-zero.jpeg#center "700px")
+![(Raspberry Pi Zero running object detection)](rpi-zero.jpeg#center "700px")
 
-![(Raspberry Pi Zero running object detection)](images/object-detection-fpv-drone/requirements.png#center "700px")
+![(Raspberry Pi Zero running object detection)](requirements.png#center "700px")
 
 
 ## Closing remarks
 
 Just another video...
 
-![(Object detection on elephants)](images/object-detection-fpv-drone/elephants.gif#center "700px")
+![(Object detection on elephants)](elephants.gif#center "700px")
 
 
 
