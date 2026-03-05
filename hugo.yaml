@@ -1,4 +1,5 @@
-baseURL: https://inigoliz.github.io/
+# baseURL: https://inigoliz.github.io/
+baseURL: https://inigoliz.github.io/portfolio/
 languageCode: en-us
 title: Iñigo Lara's Portfolio
 theme: ["PaperMod"]
