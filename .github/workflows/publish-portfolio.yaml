@@ -1,4 +1,4 @@
-name: (NEW) Deploy Portfolio to Pages
+name: Deploy Portfolio to Pages
 
 on:
   push:
@@ -54,8 +54,7 @@ jobs:
         run: |
           hugo \
             --buildDrafts \
-            --gc \
-            --baseURL ${{ steps.pages.outputs.base_url }}
+            --gc
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
