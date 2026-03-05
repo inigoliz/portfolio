@@ -1,4 +1,3 @@
-# baseURL: https://inigoliz.github.io/
 baseURL: https://inigoliz.github.io/portfolio/
 languageCode: en-us
 title: Iñigo Lara's Portfolio
@@ -18,13 +17,13 @@ params:
       I am a physicist and a maker. I enjoy hacking, coding and creating. \ 
 
       I'm currently engaged in the [**Winter of Output**](./posts/winter-of-output)."
-      imageUrl: "/images/me.jpg"
+      imageUrl: "images/me.jpg"
       imageTitle: "Me"
       imageWidth: 250
       imageHeight: 250
       buttons:
         - name: Portfolio
-          url: "/portfolio/posts/"
+          url: "posts/"
   caches:
     images:
       dir: :cacheDir/images
