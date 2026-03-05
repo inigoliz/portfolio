@@ -38,7 +38,7 @@ jobs:
       - name: Pull LFS and list images
         run: |
           git lfs pull
-          du -hd 1 static/images/
+          du -hd 1 static/posts/
 
       - name: Setup Pages
         id: pages
