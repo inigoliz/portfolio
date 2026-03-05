@@ -24,6 +24,9 @@ params:
       buttons:
         - name: Portfolio
           url: "/posts/"
+  caches:
+    images:
+      dir: :cacheDir/images
 
   socialIcons:
     - name: github
