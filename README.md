@@ -16,6 +16,12 @@ You may also deploy drafts for WIP:
 hugo server -D
 ```
 
+The previous command will fail to link the pages correctly due to the mismatch in the base URL. Instead, use:
+
+```bash
+hugo server -D --baseURL http://localhost:1313/
+```
+
 Creating a new post is as simple as adding a new entry to `content/posts/`. However, sometimes I prefer the fancy cli way:
 
 ```bash
