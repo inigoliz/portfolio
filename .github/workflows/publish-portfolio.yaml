@@ -54,6 +54,7 @@ jobs:
         run: |
           hugo \
             --buildDrafts \
+            --baseURL https://inigoliz.github.io/portfolio/
             --gc
 
       - name: Upload artifact
