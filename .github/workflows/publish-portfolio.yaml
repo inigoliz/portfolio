@@ -55,9 +55,9 @@ jobs:
           hugo \
             --buildDrafts \
             --baseURL https://inigoliz.com/ \
-            # --baseURL https://inigoliz.github.io/portfolio/ \
             --gc
-
+        # --baseURL https://inigoliz.github.io/portfolio/ \
+        
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
