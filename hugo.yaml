@@ -5,7 +5,7 @@ theme: ["PaperMod"]
 
 params:
   author:
-    name: Iñigo Lara
+    name: "Iñigo Lara"
   ShowCodeCopyButtons: true 
   cover:
     linkFullImages: false
