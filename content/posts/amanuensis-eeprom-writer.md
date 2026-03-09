@@ -4,7 +4,7 @@ draft: false
 title: 'Minimalistic EEPROM programmer'
 slug: amanuensis-eeprom-interface
 cover:
-  image: "posts/shield_full.jpeg"
+  image: "posts/amanuensis-eeprom-interface/shield_full.jpeg"
   alt: "Cover image"
   relative: false
 ---

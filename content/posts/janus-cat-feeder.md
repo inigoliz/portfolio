@@ -4,7 +4,7 @@ draft: false
 title: 'Automatic Cat Feeder'
 slug: janus-cat-feeder
 cover:
-  image: "posts/IMG_9995.gif"
+  image: "posts/janus-cat-feeder/IMG_9995.gif"
   alt: "Cover image"
   relative: false
 ---

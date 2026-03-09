@@ -4,7 +4,7 @@ draft: false
 title: 'Simple Python quine, step-by-step'
 slug: simple-python-quine
 cover:
-  image: "posts/escher.png"
+  image: "posts/simple-python-quine/escher.png"
   alt: "Cover image"
   relative: false
 ---

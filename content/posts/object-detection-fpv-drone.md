@@ -4,7 +4,7 @@ draft: false
 title: 'Object Detection on FPV Drone'
 slug: object-detection-fpv-drone
 cover:
-  image: "posts/cover.png"
+  image: "posts/object-detection-fpv-drone/cover.png"
   alt: "Cover image"
   relative: false
 ---

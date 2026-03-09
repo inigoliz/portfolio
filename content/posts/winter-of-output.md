@@ -4,7 +4,7 @@ draft: false
 title: 'Winter of Output'
 slug: winter-of-output
 cover:
-  image: "posts/DSCF1490.jpg"
+  image: "posts/winter-of-output/DSCF1490.jpg"
   alt: "Cover image"
   relative: false
 ---
@@ -33,7 +33,7 @@ If you find this kind of content inspiring or you just want to support my missio
 
 I'll be having no other income these months so I'll be tremendously grateful 🫶.
 
-![(Buy me a Coffee Pic)](images/winter-og-output/img1.jpg#center)
+![(Buy me a Coffee Pic)](img1.jpg#center)
 
 ---
 

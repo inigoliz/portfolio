@@ -4,7 +4,7 @@ draft: false
 title: Teenygrad Study Notes
 slug: teenygrad-learning-notes
 cover:
-  image: "posts/graph_res.svg"
+  image: "posts/teenygrad-learning-notes/graph_res.svg"
   alt: "Cover image"
   relative: false
 ---

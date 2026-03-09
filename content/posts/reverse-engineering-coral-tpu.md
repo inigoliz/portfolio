@@ -4,7 +4,7 @@ draft: false
 title: 'Reverse Engineering a Coral TPU'
 slug: reverse-engineering-coral-tpu
 cover:
-  image: "posts/cover.png"
+  image: "posts/reverse-engineering-coral-tpu/cover.png"
   alt: "Cover image"
   relative: false
 ---
