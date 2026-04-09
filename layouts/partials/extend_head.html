@@ -1,0 +1,111 @@
+{{- if .IsHome }}
+<style>
+  /* Mold sits behind site chrome; header/main/footer stack above (see below). */
+  #p5-landing-wrap {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    z-index: 0;
+    pointer-events: none;
+    background: #1d1e20;
+  }
+
+  body.list > header.header,
+  body.list > main.main,
+  body.list > footer.footer {
+    position: relative;
+    z-index: 2;
+  }
+
+  /*
+   * Frosted panels: match page theme, blur slime behind so motion reads as a light trace
+   * and typography stays readable (main sits above the canvas but was visually transparent).
+   */
+  body.list > header.header {
+    background: color-mix(in srgb, var(--theme) 88%, transparent);
+    backdrop-filter: blur(14px) saturate(1.1);
+    -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  }
+
+  body.list .main .profile .profile_inner {
+    padding: 1.5rem clamp(1.25rem, 4vw, 2rem);
+    border-radius: calc(var(--radius) + 4px);
+    max-width: min(36rem, 100%);
+    box-sizing: border-box;
+    background: color-mix(in srgb, var(--theme) 78%, transparent);
+    backdrop-filter: blur(18px) saturate(1.12);
+    -webkit-backdrop-filter: blur(18px) saturate(1.12);
+  }
+
+  /* Frost only around footer copy (not full viewport width). */
+  body.list > footer.footer {
+    width: fit-content;
+    max-width: min(100%, calc(var(--main-width) + var(--gap) * 2));
+    margin-inline: auto;
+    box-sizing: border-box;
+    background: color-mix(in srgb, var(--theme) 82%, transparent);
+    backdrop-filter: blur(12px) saturate(1.08);
+    -webkit-backdrop-filter: blur(12px) saturate(1.08);
+    border: none;
+    outline: none;
+    box-shadow: none;
+    border-radius: var(--radius);
+  }
+
+  #p5-landing-sketch {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  #p5-landing-wrap.is-active #p5-landing-sketch {
+    pointer-events: auto;
+  }
+
+  #p5-landing-sketch canvas {
+    display: block;
+  }
+
+  .mushroom-btn {
+    position: fixed;
+    bottom: 1.25rem;
+    right: 1.25rem;
+    z-index: 10;
+    pointer-events: auto;
+    width: 4.5rem;
+    height: 4.5rem;
+    padding: 0.35rem;
+    border: 2px solid rgba(0, 0, 0, 0.12);
+    border-radius: 50%;
+    cursor: pointer;
+    background: linear-gradient(165deg, #faf7f2 0%, #e8dfd4 100%);
+    box-shadow: 0 0.2rem 0.55rem rgba(0, 0, 0, 0.22);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .mushroom-btn:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0.3rem 0.75rem rgba(0, 0, 0, 0.28);
+  }
+
+  .mushroom-btn:active {
+    transform: scale(0.96);
+  }
+
+  .mushroom-btn .slime-mold-launch-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mushroom-btn {
+      display: none;
+    }
+  }
+</style>
+{{- end }}

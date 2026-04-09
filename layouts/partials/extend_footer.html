@@ -1,0 +1,265 @@
+{{- if .IsHome }}
+<div id="p5-landing-wrap">
+  <button type="button" id="slime-mold-launch" class="mushroom-btn" aria-label="Start slime mold simulation">
+    <img src="{{ "icons/slime-mold-launch.svg" | relURL }}" width="40" height="40" alt="" decoding="async" aria-hidden="true" class="slime-mold-launch-icon" />
+  </button>
+  <div id="p5-landing-sketch"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.11.3/lib/p5.min.js"></script>
+<script>
+(function () {
+  var instance = null;
+
+  function Mold(p, validCoords, startX, startY) {
+    this.p = p;
+    this.r = 0.5;
+    this.textWeight = 0.0;
+    if (startX != null && startY != null) {
+      this.x = startX;
+      this.y = startY;
+    } else {
+      var pick = validCoords[p.floor(p.random(validCoords.length))];
+      this.x = pick[0];
+      this.y = pick[1];
+    }
+    this.heading = p.random(360);
+    this.vx = p.cos(this.heading);
+    this.vy = p.sin(this.heading);
+    this.rotAngle = 45;
+    this.rSensorPos = p.createVector(0, 0);
+    this.lSensorPos = p.createVector(0, 0);
+    this.fSensorPos = p.createVector(0, 0);
+    this.sensorAngle = 45;
+    this.sensorDist = 30;
+  }
+
+  Mold.prototype.update = function () {
+    var p = this.p;
+    var d = this.dGlobal;
+    var w = p.width;
+    var h = p.height;
+    this.vx = p.cos(this.heading);
+    this.vy = p.sin(this.heading);
+    this.x = (this.x + this.vx + w) % w;
+    this.y = (this.y + this.vy + h) % h;
+    this.getSensorPos(this.rSensorPos, this.heading + this.sensorAngle);
+    this.getSensorPos(this.lSensorPos, this.heading - this.sensorAngle);
+    this.getSensorPos(this.fSensorPos, this.heading);
+    var index;
+    var l;
+    var r;
+    var f;
+    var pixels = p.pixels;
+    index = 4 * d * d * w * p.floor(this.rSensorPos.y) + 4 * d * p.floor(this.rSensorPos.x);
+    r = (1 - this.textWeight) * pixels[index];
+    index = 4 * d * d * w * p.floor(this.lSensorPos.y) + 4 * d * p.floor(this.lSensorPos.x);
+    l = (1 - this.textWeight) * pixels[index];
+    index = 4 * d * d * w * p.floor(this.fSensorPos.y) + 4 * d * p.floor(this.fSensorPos.x);
+    f = (1 - this.textWeight) * pixels[index];
+    if (l == r) {
+      if (p.random(1) < 0.999) {
+        this.heading += 0;
+      } else {
+        this.heading += p.random(360);
+      }
+    // } else if (f < l && f < r) {
+    //   if (p.random(1) < 0.2) {
+    //     this.heading += this.rotAngle;
+    //   }
+    } else if (l > r) {
+      this.heading -= this.rotAngle;
+    } else if (r > l) {
+      this.heading += this.rotAngle;
+    // } else if (f === 0 && l === 0 && r === 0) {
+    //   if (p.random(1) < 0.5) {
+    //     this.heading += p.random(360);
+    //   }
+    }
+    var frost = p.slimeFrostInner;
+    if (frost && frost.active) {
+      var fx0 = frost.x0;
+      var fx1 = frost.x1;
+      var fy0 = frost.y0;
+      var fy1 = frost.y1;
+      if (this.x >= fx0 && this.x <= fx1 && this.y >= fy0 && this.y <= fy1) {
+        var fcx = (fx0 + fx1) * 0.5;
+        var fcy = (fy0 + fy1) * 0.5;
+        var rdx = this.x - fcx;
+        var rdy = this.y - fcy;
+        var len = Math.sqrt(rdx * rdx + rdy * rdy);
+        if (len < 1e-4) {
+          rdx = p.random(-1, 1);
+          rdy = p.random(-1, 1);
+          len = Math.sqrt(rdx * rdx + rdy * rdy) || 1;
+        }
+        rdx /= len;
+        rdy /= len;
+        var str = p.slimeFrostRepulseStrength != null ? p.slimeFrostRepulseStrength : 0.7;
+        var step = str * 5;
+        this.x = (this.x + rdx * step + w) % w;
+        this.y = (this.y + rdy * step + h) % h;
+      }
+    }
+  };
+
+  Mold.prototype.display = function () {
+    var p = this.p;
+    p.noStroke();
+    p.fill(255);
+    p.ellipse(this.x, this.y, 2 * this.r, 2 * this.r);
+  };
+
+  Mold.prototype.getSensorPos = function (sensor, angle) {
+    var p = this.p;
+    var w = p.width;
+    var h = p.height;
+    sensor.x = (this.x + this.sensorDist * p.cos(angle) + w) % w;
+    sensor.y = (this.y + this.sensorDist * p.sin(angle) + h) % h;
+  };
+
+  window.startPortfolioSlimeMold = function () {
+    if (instance) return;
+    var container = document.getElementById('p5-landing-sketch');
+    if (!container) return;
+
+    var wrap = document.getElementById('p5-landing-wrap');
+    if (wrap) {
+      wrap.classList.add('is-active');
+    }
+
+    instance = new p5(function (p) {
+      var molds = [];
+      var num = 5000;
+      var d;
+      var validCoords;
+      var frameW = 20;
+      var slimeFrostRepulseStrength = 0.9;
+
+      function frostRectForCanvas(pw, ph) {
+        var panel = document.querySelector('.main .profile .profile_inner');
+        var ox0;
+        var ox1;
+        var oy0;
+        var oy1;
+        if (panel) {
+          var rect = panel.getBoundingClientRect();
+          ox0 = Math.max(0, Math.floor(rect.left));
+          ox1 = Math.min(pw - 1, Math.floor(rect.right - 1));
+          oy0 = Math.max(0, Math.floor(rect.top));
+          oy1 = Math.min(ph - 1, Math.floor(rect.bottom - 1));
+        }
+        if (!panel || ox1 < ox0 || oy1 < oy0) {
+          var cx = pw / 2;
+          var cy = ph / 2;
+          var rw = pw / 3;
+          var rh = ph / 3;
+          ox0 = Math.max(0, Math.floor(cx - rw / 2));
+          ox1 = Math.min(pw - 1, Math.ceil(cx + rw / 2));
+          oy0 = Math.max(0, Math.floor(cy - rh / 2));
+          oy1 = Math.min(ph - 1, Math.ceil(cy + rh / 2));
+        }
+        var ix0 = ox0 + frameW;
+        var ix1 = ox1 - frameW;
+        var iy0 = oy0 + frameW;
+        var iy1 = oy1 - frameW;
+        var hasInterior = ix0 <= ix1 && iy0 <= iy1;
+        return {
+          ox0: ox0,
+          ox1: ox1,
+          oy0: oy0,
+          oy1: oy1,
+          ix0: ix0,
+          ix1: ix1,
+          iy0: iy0,
+          iy1: iy1,
+          hasInterior: hasInterior
+        };
+      }
+
+      function applySlimeFrostZone(fr) {
+        p.slimeFrostInner = {
+          active: fr.hasInterior,
+          x0: fr.ix0,
+          x1: fr.ix1,
+          y0: fr.iy0,
+          y1: fr.iy1
+        };
+        p.slimeFrostRepulseStrength = slimeFrostRepulseStrength;
+      }
+
+      p.setup = function () {
+        p.createCanvas(p.windowWidth, p.windowHeight);
+        p.angleMode(p.DEGREES);
+        d = p.pixelDensity();
+        validCoords = [];
+        /* Spawn on a 20px-thick frame around the frosted profile card (viewport = canvas). */
+        var fr = frostRectForCanvas(p.width, p.height);
+        applySlimeFrostZone(fr);
+        for (var x = fr.ox0; x <= fr.ox1; x++) {
+          for (var y = fr.oy0; y <= fr.oy1; y++) {
+            if (!fr.hasInterior || x < fr.ix0 || x > fr.ix1 || y < fr.iy0 || y > fr.iy1) {
+              validCoords.push([x, y]);
+            }
+          }
+        }
+        for (var i = 0; i < num; i++) {
+          var m = new Mold(p, validCoords);
+          m.dGlobal = d;
+          molds[i] = m;
+        }
+        p.background(29, 30, 32);
+      };
+
+      p.draw = function () {
+        p.background(29, 30, 32, 5);
+        p.loadPixels();
+        for (var i = 0; i < molds.length; i++) {
+          molds[i].dGlobal = d;
+          molds[i].update();
+          molds[i].display();
+        }
+      };
+
+      p.mouseDragged = function () {
+        var spawnRadius = 20;
+        var spawnCount = 20;
+        for (var i = 0; i < spawnCount; i++) {
+          var x = p.mouseX + p.random(-spawnRadius, spawnRadius);
+          var y = p.mouseY + p.random(-spawnRadius, spawnRadius);
+          var m = new Mold(p, validCoords, x, y);
+          m.dGlobal = d;
+          molds.push(m);
+        }
+      };
+
+      p.windowResized = function () {
+        p.resizeCanvas(p.windowWidth, p.windowHeight);
+        applySlimeFrostZone(frostRectForCanvas(p.width, p.height));
+      };
+    }, 'p5-landing-sketch');
+
+    var btn = document.getElementById('slime-mold-launch');
+    if (btn) {
+      btn.hidden = true;
+    }
+  };
+
+  function bindLaunch() {
+    var btn = document.getElementById('slime-mold-launch');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+      }
+      window.startPortfolioSlimeMold();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindLaunch);
+  } else {
+    bindLaunch();
+  }
+})();
+</script>
+{{- end }}
