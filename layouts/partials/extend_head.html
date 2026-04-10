@@ -13,8 +13,7 @@
   }
 
   body.list > header.header,
-  body.list > main.main,
-  body.list > footer.footer {
+  body.list > main.main {
     position: relative;
     z-index: 2;
   }
@@ -29,29 +28,59 @@
     -webkit-backdrop-filter: blur(14px) saturate(1.1);
   }
 
-  body.list .main .profile .profile_inner {
-    padding: 1.5rem clamp(1.25rem, 4vw, 2rem);
-    border-radius: calc(var(--radius) + 4px);
+  /* Stack: circular frost (photo) + rectangular frost (copy + links + button). */
+  body.list .main .profile .profile_inner--split {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
     max-width: min(36rem, 100%);
+    padding: 0;
+    margin-inline: auto;
+    text-align: center;
+    background: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  body.list .main .profile .profile_frost_avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(0.1rem, 0.35vw, 0.2rem);
     box-sizing: border-box;
+    width: min(calc(250px + 0.45rem), min(88vw, 16.25rem));
+    height: min(calc(250px + 0.45rem), min(88vw, 16.25rem));
+    aspect-ratio: 1;
+    border-radius: 50%;
     background: color-mix(in srgb, var(--theme) 78%, transparent);
     backdrop-filter: blur(18px) saturate(1.12);
     -webkit-backdrop-filter: blur(18px) saturate(1.12);
   }
 
-  /* Frost only around footer copy (not full viewport width). */
-  body.list > footer.footer {
-    width: fit-content;
-    max-width: min(100%, calc(var(--main-width) + var(--gap) * 2));
-    margin-inline: auto;
+  body.list .main .profile .profile_frost_avatar img {
+    width: min(250px, 92%) !important;
+    height: auto !important;
+    max-width: 100%;
+    border-radius: 50%;
+    display: block;
+  }
+
+  body.list .main .profile .profile_frost_body {
+    width: 100%;
+    max-width: min(22rem, 100%);
+    padding: 0.85rem 1rem 1rem;
     box-sizing: border-box;
-    background: color-mix(in srgb, var(--theme) 82%, transparent);
-    backdrop-filter: blur(12px) saturate(1.08);
-    -webkit-backdrop-filter: blur(12px) saturate(1.08);
-    border: none;
-    outline: none;
-    box-shadow: none;
-    border-radius: var(--radius);
+    border-radius: calc(var(--radius) + 2px);
+    background: color-mix(in srgb, var(--theme) 78%, transparent);
+    backdrop-filter: blur(18px) saturate(1.12);
+    -webkit-backdrop-filter: blur(18px) saturate(1.12);
+  }
+
+  /* Hide footer (copyright / year / “Powered by”) on home only. */
+  body.list > footer.footer {
+    display: none !important;
   }
 
   #p5-landing-sketch {
@@ -73,8 +102,9 @@
     position: fixed;
     bottom: 1.25rem;
     right: 1.25rem;
-    z-index: 10;
+    z-index: 15;
     pointer-events: auto;
+    touch-action: manipulation;
     width: 4.5rem;
     height: 4.5rem;
     padding: 0.35rem;

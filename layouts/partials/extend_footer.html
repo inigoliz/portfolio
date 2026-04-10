@@ -1,10 +1,11 @@
 {{- if .IsHome }}
+{{/* Canvas stays z-index 0; button is a sibling so it stacks above main (z-index 2) and receives taps on mobile. */}}
 <div id="p5-landing-wrap">
-  <button type="button" id="slime-mold-launch" class="mushroom-btn" aria-label="Start slime mold simulation">
-    <img src="{{ "icons/slime-mold-launch.svg" | relURL }}" width="40" height="40" alt="" decoding="async" aria-hidden="true" class="slime-mold-launch-icon" />
-  </button>
   <div id="p5-landing-sketch"></div>
 </div>
+<button type="button" id="slime-mold-launch" class="mushroom-btn" aria-label="Start slime mold simulation">
+  <img src="{{ "icons/slime-mold-launch.svg" | relURL }}" width="40" height="40" alt="" decoding="async" aria-hidden="true" class="slime-mold-launch-icon" />
+</button>
 <script src="https://cdn.jsdelivr.net/npm/p5@1.11.3/lib/p5.min.js"></script>
 <script>
 (function () {
@@ -75,17 +76,13 @@
     //     this.heading += p.random(360);
     //   }
     }
-    var frost = p.slimeFrostInner;
-    if (frost && frost.active) {
-      var fx0 = frost.x0;
-      var fx1 = frost.x1;
-      var fy0 = frost.y0;
-      var fy1 = frost.y1;
-      if (this.x >= fx0 && this.x <= fx1 && this.y >= fy0 && this.y <= fy1) {
-        var fcx = (fx0 + fx1) * 0.5;
-        var fcy = (fy0 + fy1) * 0.5;
-        var rdx = this.x - fcx;
-        var rdy = this.y - fcy;
+    var regs = p.slimeFrostRegions;
+    if (regs) {
+      var str = p.slimeFrostRepulseStrength != null ? p.slimeFrostRepulseStrength : 0.7;
+      var step = str * 5;
+      function repelFromCenter(px, py, cx, cy) {
+        var rdx = px - cx;
+        var rdy = py - cy;
         var len = Math.sqrt(rdx * rdx + rdy * rdy);
         if (len < 1e-4) {
           rdx = p.random(-1, 1);
@@ -94,10 +91,35 @@
         }
         rdx /= len;
         rdy /= len;
-        var str = p.slimeFrostRepulseStrength != null ? p.slimeFrostRepulseStrength : 0.7;
-        var step = str * 5;
-        this.x = (this.x + rdx * step + w) % w;
-        this.y = (this.y + rdy * step + h) % h;
+        return { x: (px + rdx * step + w) % w, y: (py + rdy * step + h) % h };
+      }
+      if (regs.rects) {
+        for (var ri = 0; ri < regs.rects.length; ri++) {
+          var R = regs.rects[ri];
+          if (!R.active) continue;
+          if (this.x >= R.x0 && this.x <= R.x1 && this.y >= R.y0 && this.y <= R.y1) {
+            var fcx = (R.x0 + R.x1) * 0.5;
+            var fcy = (R.y0 + R.y1) * 0.5;
+            var out = repelFromCenter(this.x, this.y, fcx, fcy);
+            this.x = out.x;
+            this.y = out.y;
+            break;
+          }
+        }
+      }
+      if (regs.circles) {
+        for (var ci = 0; ci < regs.circles.length; ci++) {
+          var C = regs.circles[ci];
+          if (!C.active) continue;
+          var dx = this.x - C.cx;
+          var dy = this.y - C.cy;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < C.innerR) {
+            var out2 = repelFromCenter(this.x, this.y, C.cx, C.cy);
+            this.x = out2.x;
+            this.y = out2.y;
+          }
+        }
       }
     }
   };
@@ -135,33 +157,18 @@
       var frameW = 20;
       var slimeFrostRepulseStrength = 0.9;
 
-      function frostRectForCanvas(pw, ph) {
-        var panel = document.querySelector('.main .profile .profile_inner');
-        var ox0;
-        var ox1;
-        var oy0;
-        var oy1;
-        if (panel) {
-          var rect = panel.getBoundingClientRect();
-          ox0 = Math.max(0, Math.floor(rect.left));
-          ox1 = Math.min(pw - 1, Math.floor(rect.right - 1));
-          oy0 = Math.max(0, Math.floor(rect.top));
-          oy1 = Math.min(ph - 1, Math.floor(rect.bottom - 1));
-        }
-        if (!panel || ox1 < ox0 || oy1 < oy0) {
-          var cx = pw / 2;
-          var cy = ph / 2;
-          var rw = pw / 3;
-          var rh = ph / 3;
-          ox0 = Math.max(0, Math.floor(cx - rw / 2));
-          ox1 = Math.min(pw - 1, Math.ceil(cx + rw / 2));
-          oy0 = Math.max(0, Math.floor(cy - rh / 2));
-          oy1 = Math.min(ph - 1, Math.ceil(cy + rh / 2));
-        }
-        var ix0 = ox0 + frameW;
-        var ix1 = ox1 - frameW;
-        var iy0 = oy0 + frameW;
-        var iy1 = oy1 - frameW;
+      function rectFrameZone(el, pw, ph, fw) {
+        if (!el) return null;
+        var r = el.getBoundingClientRect();
+        var ox0 = Math.max(0, Math.floor(r.left));
+        var ox1 = Math.min(pw - 1, Math.floor(r.right - 1));
+        var oy0 = Math.max(0, Math.floor(r.top));
+        var oy1 = Math.min(ph - 1, Math.floor(r.bottom - 1));
+        if (ox1 < ox0 || oy1 < oy0) return null;
+        var ix0 = ox0 + fw;
+        var ix1 = ox1 - fw;
+        var iy0 = oy0 + fw;
+        var iy1 = oy1 - fw;
         var hasInterior = ix0 <= ix1 && iy0 <= iy1;
         return {
           ox0: ox0,
@@ -176,15 +183,117 @@
         };
       }
 
-      function applySlimeFrostZone(fr) {
-        p.slimeFrostInner = {
-          active: fr.hasInterior,
-          x0: fr.ix0,
-          x1: fr.ix1,
-          y0: fr.iy0,
-          y1: fr.iy1
+      function circleRepelFromAvatar(el, fw) {
+        if (!el) return null;
+        var r = el.getBoundingClientRect();
+        var cx = (r.left + r.right) * 0.5;
+        var cy = (r.top + r.bottom) * 0.5;
+        var outerR = Math.min(r.width, r.height) * 0.5;
+        var innerR = Math.max(0, outerR - fw);
+        return { cx: cx, cy: cy, innerR: innerR, active: innerR > 0.5 };
+      }
+
+      function frostRectForCanvas(pw, ph) {
+        var av = document.querySelector('.profile_frost_avatar');
+        var bd = document.querySelector('.profile_frost_body');
+        var zones = [];
+        var zA = rectFrameZone(av, pw, ph, frameW);
+        if (zA) zones.push(zA);
+        var zB = rectFrameZone(bd, pw, ph, frameW);
+        if (zB) zones.push(zB);
+        if (zones.length > 0) {
+          return { mode: 'multi', zones: zones };
+        }
+        var cx = pw / 2;
+        var cy = ph / 2;
+        var rw = pw / 3;
+        var rh = ph / 3;
+        var ox0 = Math.max(0, Math.floor(cx - rw / 2));
+        var ox1 = Math.min(pw - 1, Math.ceil(cx + rw / 2));
+        var oy0 = Math.max(0, Math.floor(cy - rh / 2));
+        var oy1 = Math.min(ph - 1, Math.ceil(cy + rh / 2));
+        var ix0 = ox0 + frameW;
+        var ix1 = ox1 - frameW;
+        var iy0 = oy0 + frameW;
+        var iy1 = oy1 - frameW;
+        return {
+          mode: 'multi',
+          zones: [
+            {
+              ox0: ox0,
+              ox1: ox1,
+              oy0: oy0,
+              oy1: oy1,
+              ix0: ix0,
+              ix1: ix1,
+              iy0: iy0,
+              iy1: iy1,
+              hasInterior: ix0 <= ix1 && iy0 <= iy1
+            }
+          ]
         };
+      }
+
+      function applySlimeFrostRegions(pw, ph) {
+        var av = document.querySelector('.profile_frost_avatar');
+        var bd = document.querySelector('.profile_frost_body');
+        var rectsRepel = [];
+        var circlesRepel = [];
+        if (bd) {
+          var br = rectFrameZone(bd, pw, ph, frameW);
+          if (br && br.hasInterior) {
+            rectsRepel.push({
+              active: true,
+              x0: br.ix0,
+              x1: br.ix1,
+              y0: br.iy0,
+              y1: br.iy1
+            });
+          }
+        }
+        if (av) {
+          var c = circleRepelFromAvatar(av, frameW);
+          if (c && c.active) circlesRepel.push(c);
+        }
+        if (rectsRepel.length === 0 && circlesRepel.length === 0) {
+          var fr0 = frostRectForCanvas(pw, ph);
+          if (fr0.mode === 'multi' && fr0.zones[0] && fr0.zones[0].hasInterior) {
+            var z = fr0.zones[0];
+            rectsRepel.push({
+              active: true,
+              x0: z.ix0,
+              x1: z.ix1,
+              y0: z.iy0,
+              y1: z.iy1
+            });
+          }
+        }
+        p.slimeFrostRegions = { rects: rectsRepel, circles: circlesRepel };
         p.slimeFrostRepulseStrength = slimeFrostRepulseStrength;
+      }
+
+      function fillValidCoords(fr, p) {
+        validCoords.length = 0;
+        var seen = {};
+        function add(x, y) {
+          var k = x + ',' + y;
+          if (seen[k]) return;
+          seen[k] = true;
+          validCoords.push([x, y]);
+        }
+        for (var zi = 0; zi < fr.zones.length; zi++) {
+          var z = fr.zones[zi];
+          for (var x = z.ox0; x <= z.ox1; x++) {
+            for (var y = z.oy0; y <= z.oy1; y++) {
+              if (!z.hasInterior || x < z.ix0 || x > z.ix1 || y < z.iy0 || y > z.iy1) {
+                add(x, y);
+              }
+            }
+          }
+        }
+        if (validCoords.length === 0) {
+          add(Math.floor(p.width / 2), Math.floor(p.height / 2));
+        }
       }
 
       p.setup = function () {
@@ -194,14 +303,8 @@
         validCoords = [];
         /* Spawn on a 20px-thick frame around the frosted profile card (viewport = canvas). */
         var fr = frostRectForCanvas(p.width, p.height);
-        applySlimeFrostZone(fr);
-        for (var x = fr.ox0; x <= fr.ox1; x++) {
-          for (var y = fr.oy0; y <= fr.oy1; y++) {
-            if (!fr.hasInterior || x < fr.ix0 || x > fr.ix1 || y < fr.iy0 || y > fr.iy1) {
-              validCoords.push([x, y]);
-            }
-          }
-        }
+        applySlimeFrostRegions(p.width, p.height);
+        fillValidCoords(fr, p);
         for (var i = 0; i < num; i++) {
           var m = new Mold(p, validCoords);
           m.dGlobal = d;
@@ -234,7 +337,7 @@
 
       p.windowResized = function () {
         p.resizeCanvas(p.windowWidth, p.windowHeight);
-        applySlimeFrostZone(frostRectForCanvas(p.width, p.height));
+        applySlimeFrostRegions(p.width, p.height);
       };
     }, 'p5-landing-sketch');
 

@@ -14,7 +14,8 @@ params:
       title: "¡Hola! - I'm Iñigo"
       subtitle: "👋 Welcome to my portfolio. \ 
 
-      I am a physicist and a maker. I enjoy hacking, coding and creating."
+      I am a physicist and a maker. \
+      I enjoy hacking, coding and creating."
       imageUrl: "posts/me.jpg"
       imageTitle: "Me"
       imageWidth: 250
