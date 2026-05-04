@@ -238,3 +238,5 @@ I ordered a custom PCB for my shield, but you can also make your own, as I did f
 ![(Closeup of the first shield)](shield_prev.png#center "900px")
 
 ![(Visitor Count)](https://komarev.com/ghpvc/?username=amanuensis-hugo&style=pixel&label=VISITOR+COUNT)
+
+![(count)](https://komarev.com/ghpvc/?username=landing-page&style=pixel&label=HOME+PAGE)
