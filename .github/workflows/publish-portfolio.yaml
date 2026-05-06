@@ -53,7 +53,6 @@ jobs:
       - name: Build with Hugo
         run: |
           hugo \
-            --buildDrafts \
             --baseURL https://inigoliz.com/ \
             --gc
         # --baseURL https://inigoliz.github.io/portfolio/ \
